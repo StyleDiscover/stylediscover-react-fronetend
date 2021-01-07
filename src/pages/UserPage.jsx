@@ -4,6 +4,7 @@ import { Link, useParams } from 'react-router-dom';
 
 //context and events
 import { MainPostContext } from '../context/MainPostContext';
+import { sendPageViewAnalytics } from '../events/AnalyticsEvents'; //analytics events
 import { getMainPost } from '../events/MainPostEvents';
 
 //MUI Imports
@@ -55,7 +56,12 @@ export default function UserPage() {
 
    //useeffect
    useEffect(() => {
-      getMainPost(username, mainPostDispatch).then((data) => setUserData(data));
+      getMainPost(username, mainPostDispatch).then((data) => {
+         setUserData(data);
+         if (data.id) {
+            sendPageViewAnalytics(data.id);
+         }
+      });
    }, []);
 
    return (

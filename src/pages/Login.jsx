@@ -1,5 +1,9 @@
 //react imports
 import React, { useContext, useState } from 'react';
+import { Link } from 'react-router-dom';
+
+//Login with facebook
+import FacebookLogin from '../components/Login/FacebookLogin';
 
 //context and events
 import { UserContext } from '../context/UserContext';
@@ -38,6 +42,9 @@ const useStyle = makeStyles({
    },
    customProgress: {
       marginLeft: 10,
+   },
+   facebookLogin: {
+      marginTop: 15,
    },
 });
 
@@ -131,6 +138,39 @@ export default function Login() {
                   </Button>
                </div>
             </form>
+
+            <div className={classes.facebookLogin}>
+               <FacebookLogin />
+            </div>
+
+            <Typography variant="body2" style={{ marginTop: '20px' }}>
+               Don't have an account?
+               <MUILink
+                  style={{
+                     color: '#3064ff',
+                     marginLeft: '5px',
+                     cursor: 'pointer',
+                  }}
+                  component={Link}
+                  to="/signup"
+               >
+                  Sign-up
+               </MUILink>
+            </Typography>
+            <Typography variant="body2" style={{ marginTop: '10px' }}>
+               Forgot your password?
+               <MUILink
+                  style={{
+                     color: '#3064ff',
+                     marginLeft: '5px',
+                     cursor: 'pointer',
+                  }}
+                  component={Link}
+                  to="/password/reset"
+               >
+                  Reset Password
+               </MUILink>
+            </Typography>
          </Paper>
       </Container>
    );

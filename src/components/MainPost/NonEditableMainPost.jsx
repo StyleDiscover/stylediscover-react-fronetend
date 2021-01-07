@@ -1,13 +1,19 @@
 //react imports
 import React, { useState, useEffect, useContext } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 
 //import component
 import NonEditableComponentPost from '../ComponentPost/NonEditableComponentPost';
 
+//crypto imports
+import AES from 'crypto-js/aes';
+
 //context and events imports
 import { MainPostContext } from '../../context/MainPostContext';
 import { getMainPostById } from '../../events/MainPostEvents';
+
+//time ago
+import TimeAgo from 'react-timeago';
 
 //MUI Imports
 import {
@@ -16,6 +22,10 @@ import {
    CardContent,
    Grid,
    makeStyles,
+   CardHeader,
+   Typography,
+   Avatar,
+   IconButton,
 } from '@material-ui/core';
 
 //MUI make style
@@ -24,6 +34,7 @@ const useStyles = makeStyles({
       height: 0,
       paddingTop: '100%',
       WebkitTapHighlightColor: 'transparent',
+      cursor: 'pointer',
    },
    mainPostRoot: {
       backgroundPosition: 'cover',
@@ -40,6 +51,13 @@ export default function NonEditableMainPost({ id }) {
    //states
    const [mainPostData, setMainPostData] = useState();
 
+   //use history
+   const history = useHistory();
+
+   const encryptedId = AES.encrypt(`${id}`, 'Pjmaq7EV2C7lQeaUuLVD')
+      .toString()
+      .replace(/\//g, '*');
+
    //use effect
    useEffect(() => {
       getMainPostById(id, mainPostDispatch).then((data) =>
@@ -51,6 +69,58 @@ export default function NonEditableMainPost({ id }) {
       <div>
          {mainPostData && (
             <Card>
+               {/* CARD HEADER STARTS */}
+               <CardHeader
+                  title={
+                     <Typography variant="body1" style={{ fontSize: 14 }}>
+                        {mainPostData.name
+                           ? mainPostData.name
+                           : mainPostData.username}
+                     </Typography>
+                  }
+                  subheader={
+                     <Typography variant="body2" style={{ fontSize: 11 }}>
+                        <TimeAgo
+                           date={mainPostData.created_at}
+                           minPeriod={30}
+                        />
+                     </Typography>
+                  }
+                  avatar={
+                     mainPostData.profile_picture !== null ? (
+                        <Avatar
+                           src={mainPostData.profile_picture}
+                           alt={mainPostData.username}
+                           style={{
+                              width: 30,
+                              height: 30,
+                           }}
+                        ></Avatar>
+                     ) : (
+                        <Avatar
+                           alt={mainPostData.username}
+                           style={{
+                              width: 30,
+                              height: 30,
+                           }}
+                        ></Avatar>
+                     )
+                  }
+                  // action={
+                  //    <div>
+                  //       <IconButton
+                  //          style={{ margin: '0px 5px' }}
+                  //          aria-controls="edit-menu"
+                  //          aria-haspopup="true"
+                  //          onClick={OpenEditMenu}
+                  //       >
+                  //          <MoreVert />
+                  //       </IconButton>
+                  //    </div>
+                  // }
+               ></CardHeader>
+               {/* CARD HEADER ENDS */}
+
                {/* MAIN IMAGE STARTS */}
                {mainPostData.media_type === 'IM' && (
                   <CardMedia
@@ -59,26 +129,23 @@ export default function NonEditableMainPost({ id }) {
                      classes={{
                         root: classes.mainPostRoot,
                      }}
+                     onClick={() => {
+                        history.push(`/post/${encryptedId}`);
+                     }}
                   ></CardMedia>
                )}
                {mainPostData.media_type === 'VD' && (
-                  <CardMedia>
-                     <video
-                        // controls
-                        autoPlay
-                        loop
-                        muted
-                        style={{
-                           width: '100%',
-                        }}
-                     >
-                        <source
-                           src={mainPostData.media_url}
-                           title="Video"
-                           type="video/mp4"
-                        ></source>
-                     </video>
-                  </CardMedia>
+                  <CardMedia
+                     image={mainPostData.media_url}
+                     component="video"
+                     autoPlay
+                     loop
+                     muted
+                     style={{ cursor: 'pointer' }}
+                     onClick={() => {
+                        history.push(`/post/${encryptedId}`);
+                     }}
+                  ></CardMedia>
                )}
                {/* MAIN IMAGE ENDS */}
                {/* COMPONENT IMAGES START */}
@@ -90,6 +157,8 @@ export default function NonEditableMainPost({ id }) {
                               <Grid item xs={3} key={componentId}>
                                  <NonEditableComponentPost
                                     componentId={componentId}
+                                    mainPostId={mainPostData.id}
+                                    userId={mainPostData.user_id}
                                  />
                               </Grid>
                            );

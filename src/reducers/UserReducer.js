@@ -36,6 +36,22 @@ export const userReducer = (state, action) => {
             userData: action.data,
          };
 
+      case 'SET_USER_PROFILE_PICTURE':
+         return {
+            ...state,
+            userData: { ...state.userData, profile_picture: action.data },
+         };
+
+      case 'SET_USERNAME':
+         return {
+            ...state,
+            userData: {
+               ...state.userData,
+               username: action.data,
+               modified_username: true,
+            },
+         };
+
       case 'SET_ERROR_DATA':
          return {
             ...state,

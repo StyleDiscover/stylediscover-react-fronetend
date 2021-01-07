@@ -1,13 +1,19 @@
 //react imports
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
+
+//import my componsnts
+import MyComponents from '../components/Create/MyComponents';
+import AddComponents from '../components/General/AddComponents';
 
 //context and events imports
 import { MainPostContext } from '../context/MainPostContext';
+import { MyComponentsContext } from '../context/MyComponentContext';
 import {
    addComponent,
    publishMainPost,
    getSiteRecord,
+   getSiteMedia,
 } from '../events/MainPostEvents';
 
 //MUI Imports
@@ -28,11 +34,14 @@ import {
    DialogTitle,
    DialogContent,
    DialogActions,
+   Snackbar,
+   SnackbarContent,
+   IconButton,
 } from '@material-ui/core';
 
 //MUI Icons Import
-import { Add } from '@material-ui/icons';
-import EditableComponentPost from '../components/ComponentPost/EditableComponentPost';
+import { Add, Close } from '@material-ui/icons';
+import NonEditableComponentPost from '../components/ComponentPost/NonEditableComponentPost';
 
 //use styles
 const useStyle = makeStyles({
@@ -77,6 +86,7 @@ const useStyle = makeStyles({
    },
    customDialogField: {
       margin: '10px 0px',
+      maxWidth: 500,
    },
    customPublishButton: {
       marginTop: 10,
@@ -86,6 +96,12 @@ const useStyle = makeStyles({
    mainPostRoot: {
       backgroundPosition: 'cover',
    },
+   customProgress: {
+      marginLeft: 10,
+   },
+   customCopySnackbar: {
+      backgroundColor: '#2196f3',
+   },
 });
 
 export default function Create() {
@@ -94,6 +110,7 @@ export default function Create() {
 
    //use context
    const { mainPosts, mainPostDispatch } = useContext(MainPostContext);
+   const { myComponentData } = useContext(MyComponentsContext);
 
    //use history
    const history = useHistory();
@@ -101,19 +118,20 @@ export default function Create() {
    //state
    const [media, setMedia] = useState();
    const [mediaPreview, setMediaPreview] = useState();
-   const [componentList, setComponentList] = useState([]);
    const [caption, setCaption] = useState('');
    const [mediaType, setMediaType] = useState('IM');
+   const [componentList, setComponentList] = useState([]);
 
    //add component dialog states
    const [addDialogOpen, setAddDialogOpen] = useState(false);
-   const [pageUrl, setPageUrl] = useState('');
-   const [mediaUrl, setMediaUrl] = useState('');
+
+   //snackbar
+   const [openPublishSnackbar, setOpenPublishSnackbar] = useState(false);
 
    //flags
-   var canPublish = Boolean(media && componentList.length > 0);
+   let canPublish = Boolean(media && componentList.length > 0);
+   let componentsSeleted = Boolean(myComponentData.addComponents.length > 0);
 
-   //funtion
    const addMainPicture = (event) => {
       if (event.target.files && event.target.files[0]) {
          setMediaPreview(URL.createObjectURL(event.target.files[0]));
@@ -122,64 +140,14 @@ export default function Create() {
             setMediaType('VD');
          } else if (event.target.files[0].type.startsWith('image')) {
             setMediaType('IM');
+         } else {
+            setMediaType('NA');
          }
       }
-   };
-
-   const handleAddDialogClose = () => {
-      setAddDialogOpen(false);
-      mainPostDispatch({ type: 'UNSET_ERROR_DATA' });
    };
 
    const handleAddDialogOpen = () => {
-      setPageUrl('');
-      setMediaUrl('');
       setAddDialogOpen(true);
-   };
-
-   const handlePageUrlChange = (event) => {
-      setPageUrl(event.target.value);
-   };
-
-   const handleMediaUrlChange = (event) => {
-      setMediaUrl(event.target.value);
-   };
-
-   const handleUploadComponentImage = (event) => {
-      if (event.target.files && event.target.files[0]) {
-         setMediaUrl(event.target.files[0]);
-      }
-   };
-
-   const handleAddDialogSubmit = async (event) => {
-      event.preventDefault();
-      var siteRecords;
-      var hostname;
-      var tempComponentId;
-
-      if (pageUrl.startsWith('http')) {
-         var tempPageUrl = new URL(pageUrl);
-         var tempHostname = tempPageUrl.hostname.toString();
-         if (tempHostname.startsWith('www')) {
-            hostname = tempHostname.substring(4);
-         } else {
-            hostname = tempHostname;
-         }
-      }
-
-      siteRecords = await getSiteRecord(hostname);
-
-      var componentData = new FormData();
-      componentData.append('media_url', mediaUrl);
-      componentData.append('page_url', pageUrl);
-      componentData.append('site_records', siteRecords);
-
-      tempComponentId = await addComponent(componentData, mainPostDispatch);
-
-      if (!componentList.includes(tempComponentId) && tempComponentId !== -1) {
-         setComponentList([...componentList, tempComponentId]);
-         handleAddDialogClose();
-      }
    };
 
    const handlePublish = async (event) => {
@@ -189,10 +157,23 @@ export default function Create() {
       mainPostData.append('media_type', mediaType);
       mainPostData.append('caption', caption);
 
-      await publishMainPost(mainPostData, componentList, mainPostDispatch);
-
-      history.push('/profile');
+      await publishMainPost(
+         mainPostData,
+         componentList.slice(0, 8),
+         mainPostDispatch,
+         history
+      );
    };
+
+   const handleCloseCopySnackbar = (event, reason) => {
+      if (reason === 'clickaway') {
+         return;
+      }
+
+      setOpenPublishSnackbar(false);
+   };
+
+   //hnadleSubmit
 
    return (
       <Container className="margin-top-80" maxWidth="xs">
@@ -257,13 +238,13 @@ export default function Create() {
                      componentList.map((componentId) => {
                         return (
                            <Grid item xs={3} key={componentId}>
-                              <EditableComponentPost
+                              <NonEditableComponentPost
                                  componentId={componentId}
                               />
                            </Grid>
                         );
                      })}
-                  {componentList.length < 8 && (
+                  {componentList.length < 8 && media && (
                      <Grid item xs={3}>
                         <Paper
                            className={classes.paperImgStyle}
@@ -274,6 +255,11 @@ export default function Create() {
                            <Add className={classes.customCreateButton} />
                         </Paper>
                      </Grid>
+                  )}
+                  {!media && (
+                     <Typography align="center" variant="body1">
+                        Please add a media before adding component.
+                     </Typography>
                   )}
                </Grid>
             </CardContent>
@@ -288,104 +274,50 @@ export default function Create() {
             disabled={!canPublish || mainPosts.loading}
          >
             Publish
+            {mainPosts.loading && (
+               <CircularProgress size={20} className={classes.customProgress} />
+            )}
          </Button>
          {/* DIALOG BOXES */}
          {/* DIALOG BOXES */}
          {/* DIALOG BOXES */}
-         <div>
-            <Dialog
-               maxWidth="lg"
-               open={addDialogOpen}
-               onClose={handleAddDialogClose}
-               aria-labelledby="add-component-dialog"
-               PaperProps={{
-                  style: {
-                     backgroundColor: '#eeeeee',
-                     color: '#333333',
-                  },
-               }}
-            >
-               <DialogTitle id="add-component-dialog">
-                  Add Component
-               </DialogTitle>
-               <DialogContent>
-                  <TextField
-                     id="title"
-                     label="Page URL"
-                     type="title"
-                     value={pageUrl}
-                     fullWidth={true}
-                     className={classes.customDialogField}
-                     helperText={
-                        mainPosts.errorData.page_url
-                           ? mainPosts.errorData.page_url[0]
-                           : null
-                     }
-                     error={mainPosts.errorData.page_url ? true : false}
-                     onChange={handlePageUrlChange}
-                     variant="outlined"
-                     autoComplete="off"
-                  />
-                  <TextField
-                     id="url"
-                     label="Media URL"
-                     type="url"
-                     value={mediaUrl}
-                     fullWidth={true}
-                     className={classes.customDialogField}
-                     helperText={
-                        mainPosts.errorData.media_url
-                           ? mainPosts.errorData.media_url[0]
-                           : null
-                     }
-                     error={mainPosts.errorData.media_url ? true : false}
-                     onChange={handlePageUrlChange}
-                     onChange={handleMediaUrlChange}
-                     variant="outlined"
-                     autoComplete="off"
-                     disabled={typeof mediaUrl === 'object'}
-                  />
-                  <input
-                     accept="image/*"
-                     className={classes.customMainImageInput}
-                     id="upload-component"
-                     type="file"
-                     onChange={handleUploadComponentImage}
-                  />
-                  <label htmlFor="upload-component">
-                     <Button
-                        variant="outlined"
-                        color="primary"
-                        className={classes.customPublishButton}
-                        component="span"
-                     >
-                        Choose An Image Instead
-                     </Button>
-                  </label>
-               </DialogContent>
-               {/* {errors.detail && (
-                  <Typography variant="body2" className={classes.customError}>
-                     {errors.detail}
-                  </Typography>
-               )} */}
-               <DialogActions>
-                  <Button
-                     onClick={handleAddDialogClose}
+         <AddComponents
+            openDialog={addDialogOpen}
+            media={media}
+            mediaType={mediaType}
+            handleSubmit={(list) => {
+               setComponentList([...list]);
+               console.log(list);
+            }}
+            closeDialog={(close) => setAddDialogOpen(close)}
+         />
+
+         {/* SNACKBAR STARTS*/}
+         <Snackbar
+            anchorOrigin={{
+               vertical: 'bottom',
+               horizontal: 'center',
+            }}
+            open={openPublishSnackbar}
+            autoHideDuration={6000}
+            onClose={handleCloseCopySnackbar}
+         >
+            <SnackbarContent
+               className={classes.customCopySnackbar}
+               action={
+                  <IconButton
+                     size="small"
+                     aria-label="close"
+                     onClick={handleCloseCopySnackbar}
                      color="inherit"
-                     disabled={mainPosts.loading}
                   >
-                     Cancel
-                  </Button>
-                  <Button
-                     onClick={handleAddDialogSubmit}
-                     color="primary"
-                     disabled={mainPosts.loading}
-                  >
-                     Add Component
-                  </Button>
-               </DialogActions>
-            </Dialog>
-         </div>
+                     <Close fontSize="small" />
+                  </IconButton>
+               }
+               message="Link Copied!"
+            />
+         </Snackbar>
+         {/* SNACKBAR ENDS */}
       </Container>
    );
 }

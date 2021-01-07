@@ -36,9 +36,8 @@ import {
    Menu,
    Add,
    Info,
-   ShoppingBasket,
-   BubbleChart,
-   AddBox,
+   SupervisorAccount,
+   CollectionsBookmark,
 } from '@material-ui/icons';
 
 //use style
@@ -131,24 +130,38 @@ export default function Navbar(props) {
                </ListItem>
             </List>
          )}
-         {user.isAuthenticated && (
+         {user.isAuthenticated && user.userData.modified_username && (
             <List>
                <ListItem button key="login" component={Link} to="/profile">
                   <ListItemIcon>
                      {user.userData.profile_picture ? (
                         <Avatar
                            src={user.userData.profile_picture}
-                           alt={user.userData.name}
+                           alt={
+                              user.userData.name !== ''
+                                 ? user.userData.name
+                                 : user.userData.username
+                           }
                            style={{ height: 25, width: 25 }}
                         ></Avatar>
                      ) : (
                         <Avatar
-                           alt={user.userData.name}
+                           alt={
+                              user.userData.name !== ''
+                                 ? user.userData.name
+                                 : user.userData.username
+                           }
                            style={{ height: 25, width: 25 }}
                         ></Avatar>
                      )}
                   </ListItemIcon>
-                  <ListItemText primary={user.userData.name} />
+                  <ListItemText
+                     primary={
+                        user.userData.name !== ''
+                           ? user.userData.name
+                           : user.userData.username
+                     }
+                  />
                </ListItem>
                <ListItem button key="wishlist" component={Link} to="/create">
                   <ListItemIcon>
@@ -157,38 +170,77 @@ export default function Navbar(props) {
                   </ListItemIcon>
                   <ListItemText primary="Create" />
                </ListItem>
-               {/* <ListItem button key="wishlist" component={Link} to="/wishlist">
+               <ListItem button key="wishlist" component={Link} to="/wishlist">
                   <ListItemIcon>
                      {' '}
-                     <FavoriteIcon />
+                     <Favorite />
                   </ListItemIcon>
                   <ListItemText primary="Wishlist" />
-               </ListItem> */}
+               </ListItem>
+               <ListItem
+                  button
+                  key="collections"
+                  component={Link}
+                  to="/mycollection"
+               >
+                  <ListItemIcon>
+                     {' '}
+                     <CollectionsBookmark />
+                  </ListItemIcon>
+                  <ListItemText primary="My Collections" />
+               </ListItem>
             </List>
+         )}
+         {user.isAuthenticated && user.userData.account_type === 'AD' && (
+            <>
+               <Divider />
+               <ListItem>
+                  <Typography>Admin</Typography>
+               </ListItem>
+               <List>
+                  <ListItem
+                     button
+                     key="about us"
+                     component={Link}
+                     to="/sd/admin/loginasuser"
+                  >
+                     <ListItemIcon>
+                        {' '}
+                        <SupervisorAccount />
+                     </ListItemIcon>
+                     <ListItemText primary="Login As User" />
+                  </ListItem>
+               </List>
+            </>
          )}
          <Divider />
          <List>
-            <ListItem button key="about us" component={Link} to="/about">
+            <ListItem button key="about us" component={Link} to="/sd/aboutus">
                <ListItemIcon>
                   {' '}
                   <Info />
                </ListItemIcon>
                <ListItemText primary="About Us" />
             </ListItem>
-            <ListItem button key="logout" onClick={handleLogout}>
-               <ListItemIcon>
-                  {' '}
-                  <PowerSettingsNew />
-               </ListItemIcon>
-               <ListItemText primary="Logout" />
-            </ListItem>
+            {user.isAuthenticated && (
+               <ListItem button key="logout" onClick={handleLogout}>
+                  <ListItemIcon>
+                     {' '}
+                     <PowerSettingsNew />
+                  </ListItemIcon>
+                  <ListItemText primary="Logout" />
+               </ListItem>
+            )}
          </List>
       </div>
    );
 
    return (
       <HideOnScroll {...props}>
-         <AppBar color="inherit">
+         <AppBar
+            color="inherit"
+            // style={{ background: 'rgba(255,255,255,0.5)' }}
+         >
             <Container maxWidth="md" component="div">
                <Toolbar>
                   <Typography

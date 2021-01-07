@@ -19,26 +19,27 @@ export const mainPostReducer = (state, action) => {
          };
 
       case 'ADD_MAIN_POST':
+         var tempState = [...state.mainPosts];
          return {
             ...state,
-            mainPosts: [...state.mainPosts, action.data],
+            mainPosts: [action.data, ...tempState],
          };
 
       case 'REMOVE_MAIN_POST':
          return {
             ...state,
             mainPosts: state.mainPosts.filter(
-               (mainpost) => mainpost.id !== action.id
+               (mainpost) => mainpost !== action.id
             ),
          };
 
-      case 'EDIT_MAIN_POST':
-         var tempState = state.mainPosts.filter(
-            (mainpost) => mainpost.id !== action.id
-         );
+      case 'RELOAD_MAIN_POST':
+         var index = state.mainPosts.indexOf(action.data);
+         if (index !== -1) {
+            state.mainPosts[index] = action.data;
+         }
          return {
             ...state,
-            mainPosts: [...tempState, action.data],
          };
 
       case 'SET_ERROR_DATA':
@@ -54,11 +55,7 @@ export const mainPostReducer = (state, action) => {
          };
 
       case 'UNSET_STATE':
-         return {
-            loading: false,
-            mainPosts: [],
-            errorData: {},
-         };
+         return state;
       default:
          return state;
    }

@@ -15,6 +15,8 @@ import {
    Button,
    Link as MUILink,
    CircularProgress,
+   FormControlLabel,
+   Checkbox,
 } from '@material-ui/core';
 
 //use styles
@@ -47,6 +49,8 @@ export default function Register() {
    const [name, setName] = useState('');
    const [email, setEmail] = useState('');
    const [password, setPassword] = useState('');
+   const [termAndCondition, setTermAndCondition] = useState(false);
+   const [iAmBrand, setIAmBrand] = useState(false);
 
    //MUI classes
    const classes = useStyle();
@@ -70,10 +74,12 @@ export default function Register() {
    const handleSubmit = async (event) => {
       event.preventDefault();
       const userData = {
-         username,
+         username: username.toLowerCase().replace(/\s/g, ''),
          name,
          email,
          password,
+         account_type: iAmBrand ? 'BR' : 'PR',
+         modified_username: true,
       };
       await registerWithEmail(userData, userDispatch);
    };
@@ -143,6 +149,46 @@ export default function Register() {
                   variant="outlined"
                />
                <br />
+               <br />
+               <FormControlLabel
+                  label={
+                     <Typography variant="body2">
+                        I accept the Privacy Policy and{' '}
+                        <MUILink
+                           to="/policy/termsandconditions"
+                           onClick={(event) => {
+                              event.preventDefault();
+                              event.stopPropagation();
+                              window.open('/policy/termsandconditions');
+                           }}
+                        >
+                           {' '}
+                           Terms and Conditions
+                        </MUILink>
+                     </Typography>
+                  }
+                  control={
+                     <Checkbox
+                        color="primary"
+                        checked={termAndCondition}
+                        onChange={() => setTermAndCondition(!termAndCondition)}
+                     />
+                  }
+                  labelPlacement="end"
+               />
+               <br />
+               <FormControlLabel
+                  label={<Typography variant="body2">I am a Brand</Typography>}
+                  control={
+                     <Checkbox
+                        color="primary"
+                        checked={iAmBrand}
+                        onChange={() => setIAmBrand(!iAmBrand)}
+                     />
+                  }
+                  labelPlacement="end"
+               />
+               <br />
                {user.errorData.non_field_errors && (
                   <Typography variant="body2" className={classes.customError}>
                      {user.errorData.non_field_errors}
@@ -154,7 +200,7 @@ export default function Register() {
                      color="primary"
                      variant="contained"
                      disableElevation
-                     disabled={user.loading}
+                     disabled={user.loading || !termAndCondition}
                      className={classes.submitStyles}
                   >
                      Signup

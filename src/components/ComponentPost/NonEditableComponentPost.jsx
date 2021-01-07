@@ -1,5 +1,14 @@
 //react imports
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+
+//for history
+import { useHistory } from 'react-router-dom';
+
+//context and events
+import { WishlistContext } from '../../context/WishlistContext';
+import { UserContext } from '../../context/UserContext';
+import { addWishlist, removeWishlist } from '../../events/WishlistEvents';
+import { sendEventAnalytics } from '../../events/AnalyticsEvents';
 
 //MUI Imports
 import {
@@ -26,17 +35,16 @@ const useStyle = makeStyles({
       height: 0,
       paddingTop: '100%',
       cursor: 'pointer',
+      position: 'relative',
    },
    ComponentImageRoot: {
       backgroundPosition: 'top',
    },
    custonFavButton: {
       margin: 0,
-      top: 'auto',
-      bottom: 27,
-      right: 20,
-      left: 2,
-      position: 'relative',
+      bottom: 3,
+      left: 3,
+      position: 'absolute',
       background: '#eee',
    },
    customSize: {
@@ -67,14 +75,25 @@ const useStyle = makeStyles({
    },
 });
 
-export default function NonEditableComponentPost({ componentId }) {
+export default function NonEditableComponentPost({
+   componentId,
+   mainPostId,
+   userId,
+}) {
    //MUI style classes
    const classes = useStyle();
+
+   //use history
+   const history = useHistory();
 
    //states
    const [componentPostData, setComponentPostData] = useState(); //component post data
    const [open, setOpen] = useState(false); //buy dialog open flag
    const [loadingComponent, setLoadingComponent] = useState(false); //loading component flag
+
+   //use context
+   const { wishlists, wishlistDispatch } = useContext(WishlistContext);
+   const { user } = useContext(UserContext);
 
    useEffect(() => {
       getComponentById(componentId).then((data) => setComponentPostData(data));
@@ -88,6 +107,39 @@ export default function NonEditableComponentPost({ componentId }) {
 
    const handleClose = () => {
       setOpen(false);
+   };
+
+   const handleWishlist = async (event) => {
+      event.stopPropagation();
+
+      const wishlistData = {
+         component_id: componentId,
+      };
+
+      if (user.isAuthenticated) {
+         if (wishlists.wishlists.includes(componentId)) {
+            await removeWishlist(
+               user.userData.username,
+               wishlistData,
+               wishlistDispatch
+            );
+         } else {
+            await addWishlist(
+               user.userData.username,
+               wishlistData,
+               wishlistDispatch
+            ).then(() => {
+               sendEventAnalytics(
+                  userId,
+                  mainPostId,
+                  componentId,
+                  'add_wishlist'
+               );
+            });
+         }
+      } else {
+         history.push('/login');
+      }
    };
 
    return (
@@ -105,18 +157,24 @@ export default function NonEditableComponentPost({ componentId }) {
                      }}
                      title="Image"
                   >
-                     {/* <Fab disabled={wishlistInProgress} onClick={ handleWishlist }  classes={{sizeSmall: classes.customSize, root: classes.custionButtonRoot}} size="small" aria-label="like" className={ classes.custonFavButton }>
-                    {
-                        !(Object.entries(wishlistData.content).length === 0) && isWishlisted === true ?
-                        wishlistData.content.map(data => {
-                            if(data.id === compId){
-                                return <FavoriteIcon style={ { width:15, height:15 } } /> 
-                            }
-                            return true
-                        }) :
-                        <FavoriteBorderIcon style={ { width:15, height:15 } } />
-                    }
-                </Fab> */}
+                     <Fab
+                        disabled={wishlists.loading}
+                        onClick={handleWishlist}
+                        classes={{
+                           sizeSmall: classes.customSize,
+                           root: classes.custionButtonRoot,
+                        }}
+                        size="small"
+                        aria-label="like"
+                        className={classes.custonFavButton}
+                     >
+                        {wishlists.wishlists &&
+                        wishlists.wishlists.includes(componentId) ? (
+                           <Favorite style={{ width: 15, height: 15 }} />
+                        ) : (
+                           <FavoriteBorder style={{ width: 15, height: 15 }} />
+                        )}
+                     </Fab>
                   </CardMedia>
                }
             </Paper>
@@ -141,6 +199,12 @@ export default function NonEditableComponentPost({ componentId }) {
                      variant="contained"
                      color="secondary"
                      onClick={() => {
+                        sendEventAnalytics(
+                           userId,
+                           mainPostId,
+                           componentId,
+                           'buy_button'
+                        );
                         window.open(componentPostData.page_url);
                      }}
                      disableElevation
@@ -148,32 +212,27 @@ export default function NonEditableComponentPost({ componentId }) {
                      Buy on {componentPostData.site_records.shop_site}
                   </Button>
                   <br />
-                  {/* <Button
-                  className={classes.customFavButton}
-                  disabled={wishlistInProgress}
-                  onClick={handleWishlist}
-                  variant="outlined"
-                  disableElevation
-                  startIcon={
-                     !(Object.entries(wishlistData.content).length === 0) &&
-                     isWishlisted === true ? (
-                        wishlistData.content.map((data) => {
-                           if (data.id === compId) {
-                              return (
-                                 <FavoriteIcon
-                                    style={{ width: 20, height: 20 }}
-                                 />
-                              );
-                           }
-                           return true;
-                        })
+                  <Button
+                     className={classes.customFavButton}
+                     disabled={wishlists.loading}
+                     onClick={handleWishlist}
+                     variant="outlined"
+                     disableElevation
+                     startIcon={
+                        wishlists.wishlists &&
+                        wishlists.wishlists.includes(componentId) ? (
+                           <Favorite style={{ width: 15, height: 15 }} />
+                        ) : (
+                           <FavoriteBorder style={{ width: 15, height: 15 }} />
+                        )
+                     }
+                  >
+                     {wishlists.wishlists.includes(componentId) ? (
+                        <>Remove</>
                      ) : (
-                        <FavoriteBorderIcon style={{ width: 20, height: 20 }} />
-                     )
-                  }
-               >
-                  {isWishlisted ? <>Remove</> : <>Add To Wishlist</>}
-               </Button> */}
+                        <>Add To Wishlist</>
+                     )}
+                  </Button>
                </DialogContent>
                <DialogActions>
                   <Button onClick={handleClose} color="inherit">
