@@ -5,6 +5,7 @@ import { useHistory } from 'react-router-dom';
 //import my componsnts
 import MyComponents from '../components/Create/MyComponents';
 import AddComponents from '../components/General/AddComponents';
+import CropperSD from '../components/General/Cropper';
 
 //context and events imports
 import { MainPostContext } from '../context/MainPostContext';
@@ -40,7 +41,7 @@ import {
 } from '@material-ui/core';
 
 //MUI Icons Import
-import { Add, Close } from '@material-ui/icons';
+import { Add, Close, ContactSupportOutlined } from '@material-ui/icons';
 import NonEditableComponentPost from '../components/ComponentPost/NonEditableComponentPost';
 
 //use styles
@@ -124,6 +125,7 @@ export default function Create() {
 
    //add component dialog states
    const [addDialogOpen, setAddDialogOpen] = useState(false);
+   const [cropDialogOpen, setCropDialogOpen] = useState(false);
 
    //snackbar
    const [openPublishSnackbar, setOpenPublishSnackbar] = useState(false);
@@ -134,12 +136,13 @@ export default function Create() {
 
    const addMainPicture = (event) => {
       if (event.target.files && event.target.files[0]) {
-         setMediaPreview(URL.createObjectURL(event.target.files[0]));
          setMedia(event.target.files[0]);
          if (event.target.files[0].type.startsWith('video')) {
+            setMediaPreview(URL.createObjectURL(event.target.files[0]));
             setMediaType('VD');
          } else if (event.target.files[0].type.startsWith('image')) {
             setMediaType('IM');
+            handleCropDialogOpen();
          } else {
             setMediaType('NA');
          }
@@ -148,6 +151,10 @@ export default function Create() {
 
    const handleAddDialogOpen = () => {
       setAddDialogOpen(true);
+   };
+
+   const handleCropDialogOpen = () => {
+      setCropDialogOpen(true);
    };
 
    const handlePublish = async (event) => {
@@ -290,6 +297,20 @@ export default function Create() {
                console.log(list);
             }}
             closeDialog={(close) => setAddDialogOpen(close)}
+         />
+
+         <CropperSD
+            openDialog={cropDialogOpen}
+            image={media}
+            mediaType={media ? media.type : 'image/jpeg'}
+            mediaName={media ? media.name : 'example.jpeg'}
+            handleSubmit={(croppedImage) => {
+               setMediaPreview(croppedImage);
+            }}
+            handleSubmitFile={(file) => {
+               setMedia(file);
+            }}
+            closeDialog={(close) => setCropDialogOpen(close)}
          />
 
          {/* SNACKBAR STARTS*/}

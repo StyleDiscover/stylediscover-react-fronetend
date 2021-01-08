@@ -1,18 +1,28 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 //brand page components
-import Footer from '../components/Home/Footer';
-import Hero from '../components/IAmBrand/HeroBrand';
-import ImageWithContent from '../components/Home/ImageWithContent';
+import Hero from '../components/Static/HeroBrand';
+import ImageWithFrame from '../components/Static/ImageWithFrame';
 
 //assets
-import SectionOneImage from '../assets/SectionOne.png';
+import SectionOneImage from '../assets/BrandSectionOne.png';
 import SectionOneBackground from '../assets/SectionBackground.png';
+import SectionOneBackgroundFlipped from '../assets/SectionBackgroundFlipped.png';
+import FormBackground from '../assets/FormBackground.png';
+import HeroBackground from '../assets/HeroBackground.png';
 
 //slider image
 
 //MUI Imports
-import { makeStyles, Typography } from '@material-ui/core';
+import {
+   Grid,
+   makeStyles,
+   Typography,
+   Button,
+   Link as MUILink,
+} from '@material-ui/core';
+import ContentInMiddle from '../components/Static/ContentInMiddle';
 
 //use styles
 const useStyles = makeStyles({
@@ -25,15 +35,23 @@ const useStyles = makeStyles({
       fontFamily: 'Montserrat',
       fontWeight: 500,
    },
+   customButton: {
+      fontFamily: 'Montserrat',
+      fontWeight: 500,
+      backgroundColor: '#333333',
+      padding: 30,
+      borderRadius: 15,
+      color: '#eacec5',
+   },
 });
 export default function IAmBrand() {
    //use styles
    const classes = useStyles();
    return (
-      <div style={{ minHeight: '100vh', position: 'relative' }}>
+      <div>
          <Hero />
          <div>
-            <ImageWithContent
+            <ImageWithFrame
                imageLeft={false}
                title={
                   <Typography variant="h3" className={classes.monFont}>
@@ -56,12 +74,53 @@ export default function IAmBrand() {
                // ctaUrl="/login"
             />
          </div>
-         <div
-            style={{
-               paddingBottom: 125,
-            }}
-         ></div>
-         <Footer />
+         <div>
+            <ContentInMiddle background={FormBackground}>
+               <Grid container={true}>
+                  <Grid item={true} xs={12}>
+                     <Typography
+                        align="center"
+                        variant="h2"
+                        className={classes.monFont}
+                     >
+                        Can't wait to get started?
+                     </Typography>
+                  </Grid>
+                  <Grid
+                     item={true}
+                     style={{ margin: 'auto', padding: '50px 0px' }}
+                     xs={12}
+                     md={4}
+                  >
+                     <MUILink component={Link} to="/signup">
+                        <Typography
+                           align="center"
+                           variant="h5"
+                           className={classes.customButton}
+                        >
+                           SIGNUP TODAY
+                        </Typography>
+                     </MUILink>
+                  </Grid>
+                  <Grid item={true} xs={12}>
+                     <Typography
+                        align="center"
+                        variant="body1"
+                        className={classes.monFont}
+                     >
+                        Have Questions? Reach out to us at
+                     </Typography>
+                     <Typography
+                        align="center"
+                        variant="body1"
+                        className={classes.monFont}
+                     >
+                        hello@stylediscover.in
+                     </Typography>
+                  </Grid>
+               </Grid>
+            </ContentInMiddle>
+         </div>
       </div>
    );
 }

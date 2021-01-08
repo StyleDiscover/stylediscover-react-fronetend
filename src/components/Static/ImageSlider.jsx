@@ -59,25 +59,30 @@ export default function ImageSlider(props) {
                   }}
                ></CardMedia>
 
-               <Typography align="center" variant="h6">
+               <Typography
+                  align="center"
+                  variant="h6"
+                  style={{ marginTop: 10, fontFamily: 'Montserrat' }}
+               >
                   {item.name}
                </Typography>
             </MUILink>
+            <br />
+            <Typography align="left" variant="body1">
+               {item.content}
+            </Typography>
          </GridListTile>
       );
    });
 
    return (
-      <Container
-         maxWidth="lg"
-         // style={{ overflowX: 'hidden', overflow: 'hidden' }}
-      >
+      <Container maxWidth="lg" style={{ overflow: 'hidden' }}>
          <div style={{ marginBottom: 37.5 }}>{title}</div>
          <Hidden only={['xs']}>
             <GridList
                cellHeight="auto"
                spacing={10}
-               cols="3.65"
+               cols={Object.keys(data).length > 3 ? 3.65 : 3}
                className={classes.imageSlider}
                spacing={75}
             >

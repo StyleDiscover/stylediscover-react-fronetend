@@ -38,6 +38,7 @@ import {
    getMainPostById,
    getSiteRecord,
 } from '../../events/MainPostEvents';
+import CropperSD from '../General/Cropper';
 
 //style MUI
 const useStyle = makeStyles({
@@ -47,9 +48,9 @@ const useStyle = makeStyles({
       cursor: 'pointer',
       position: 'relative',
    },
-   ComponentImageRoot: {
-      backgroundPosition: 'top',
-   },
+   // ComponentImageRoot: {
+   //    backgroundPosition: 'top',
+   // },
    customDeleteButton: {
       margin: 0,
       left: 3,
@@ -131,6 +132,7 @@ export default function EditableComponentPost({
 
    //edit dialog
    const [changeDialogOpen, setChangeDialogOpen] = useState(false);
+   const [cropDialogOpen, setCropDialogOpen] = useState(false);
    const [mediaUrl, setMediaUrl] = useState('');
    const [pageUrl, setPageUrl] = useState();
 
@@ -170,8 +172,9 @@ export default function EditableComponentPost({
 
    const handleUploadChangeMedia = (event) => {
       if (event.target.files && event.target.files[0]) {
-         setMediaPreview(URL.createObjectURL(event.target.files[0]));
+         // setMediaPreview(URL.createObjectURL(event.target.files[0]));
          setMediaUrl(event.target.files[0]);
+         handleCropDialogOpen();
       }
    };
 
@@ -268,6 +271,11 @@ export default function EditableComponentPost({
       handleDeleteDialogClose();
    };
 
+   //for crop
+   const handleCropDialogOpen = () => {
+      setCropDialogOpen(true);
+   };
+
    return (
       <div>
          {/* Component Box Starts Here */}
@@ -278,9 +286,9 @@ export default function EditableComponentPost({
                      onClick={handleClickOpen}
                      image={componentPostData.media_url}
                      className={classes.imgStyles}
-                     classes={{
-                        root: classes.ComponentImageRoot,
-                     }}
+                     // classes={{
+                     //    root: classes.ComponentImageRoot,
+                     // }}
                      title="Image"
                   >
                      <Fab
@@ -446,6 +454,22 @@ export default function EditableComponentPost({
             </DialogActions>
          </Dialog>
          {/* CHANGE IMAGE/VIDEO DIALOG ENDS */}
+
+         {/* CROPPING STARTS */}
+         <CropperSD
+            openDialog={cropDialogOpen}
+            image={mediaUrl}
+            mediaType={mediaUrl ? mediaUrl.type : 'image/jpeg'}
+            mediaName={mediaUrl ? mediaUrl.name : 'example.jpeg'}
+            handleSubmit={(croppedImage) => {
+               setMediaPreview(croppedImage);
+            }}
+            handleSubmitFile={(file) => {
+               setMediaUrl(file);
+            }}
+            closeDialog={(close) => setCropDialogOpen(close)}
+         />
+         {/* CROPPING ENDS */}
 
          {/* DELTE DIALOG STARTS */}
          <Dialog

@@ -53,6 +53,9 @@ import PrivacyPolicy from './pages/PrivacyPolicy';
 import IAmBrand from './pages/IAmBrand';
 import LoginAsUser from './pages/LoginAsUser';
 import MyCollection from './pages/MyCollection';
+import Footer from './components/Static/Footer';
+import IAmInfluencer from './pages/IAmInfluencer';
+import ScrollToTop from './components/General/ScrollToTop';
 
 //theme
 let theme = createMuiTheme(Theme);
@@ -81,60 +84,78 @@ function App() {
    }, []);
 
    return (
-      <MUIThemeProvider theme={theme}>
-         <Router>
-            <Navbar />
-            {/* //scroll to top */}
-            <Switch>
-               <Route exact path="/" component={Home} />
-               <Route exact path="/sd/aboutus" component={AboutUs} />
-               <Route exact path="/sd/iamabrand" component={IAmBrand} />
-               <Route
-                  exact
-                  path="/policy/termsandconditions"
-                  component={TermsAndConditions}
-               />
-               <Route exact path="/policy/privacy" component={PrivacyPolicy} />
+      <div style={{ minHeight: '100vh', position: 'relative' }}>
+         <MUIThemeProvider theme={theme}>
+            <Router>
+               <Navbar />
+               {/* //scroll to top */}
+               <ScrollToTop />
+               <Switch>
+                  <Route exact path="/" component={Home} />
+                  <Route exact path="/sd/aboutus" component={AboutUs} />
+                  <Route exact path="/sd/iamabrand" component={IAmBrand} />
+                  <Route
+                     exact
+                     path="/sd/iamaninfluencer"
+                     component={IAmInfluencer}
+                  />
+                  <Route
+                     exact
+                     path="/policy/termsandconditions"
+                     component={TermsAndConditions}
+                  />
+                  <Route
+                     exact
+                     path="/policy/privacy"
+                     component={PrivacyPolicy}
+                  />
 
-               {/* AUTH ROUTES CANNOT ACCESS WHEN AUTHENTICATED*/}
-               <AuthRoute exact path="/login" component={Login} />
-               <AuthRoute exact path="/signup" component={Register} />
-               <AuthRoute
-                  exact
-                  path="/password/reset"
-                  component={ResetPassword}
-               />
-               {/* UNAUTH ROUTE CANNOT ACCESS WHEN UNAUTHENTICATED*/}
-               <UnAuthRoute exact path="/create" component={Create} />
-               <UnAuthRoute exact path="/profile" component={Profile} />
-               <UnAuthRoute exact path="/wishlist" component={Wishlist} />
-               <UnAuthRoute
-                  exact
-                  path="/mycollection"
-                  component={MyCollection}
-               />
-               <UnAuthRoute
-                  exact
-                  path="/firsttimelogin/changeusername"
-                  component={ChangeUsername}
-               />
-               <Route
-                  exact
-                  path="/users/password/reset/confirm/:uid/:token"
-                  component={ResetPasswordConfirm}
-               />
-               {/* ADMIN ROUTE */}
-               <AdminRoute
-                  exact
-                  path="/sd/admin/loginasuser"
-                  component={LoginAsUser}
-               />
-               {/* USERNAME ROUTE */}
-               <Route exact path="/:username" component={UserPage} />
-               <Route exact path="/post/:id" component={PostPage} />
-            </Switch>
-         </Router>
-      </MUIThemeProvider>
+                  {/* AUTH ROUTES CANNOT ACCESS WHEN AUTHENTICATED*/}
+                  <AuthRoute exact path="/login" component={Login} />
+                  <AuthRoute exact path="/signup" component={Register} />
+                  <AuthRoute
+                     exact
+                     path="/password/reset"
+                     component={ResetPassword}
+                  />
+                  {/* UNAUTH ROUTE CANNOT ACCESS WHEN UNAUTHENTICATED*/}
+                  <UnAuthRoute exact path="/create" component={Create} />
+                  <UnAuthRoute exact path="/profile" component={Profile} />
+                  <UnAuthRoute exact path="/wishlist" component={Wishlist} />
+                  <UnAuthRoute
+                     exact
+                     path="/mycollection"
+                     component={MyCollection}
+                  />
+                  <UnAuthRoute
+                     exact
+                     path="/firsttimelogin/changeusername"
+                     component={ChangeUsername}
+                  />
+                  <Route
+                     exact
+                     path="/users/password/reset/confirm/:uid/:token"
+                     component={ResetPasswordConfirm}
+                  />
+                  {/* ADMIN ROUTE */}
+                  <AdminRoute
+                     exact
+                     path="/sd/admin/loginasuser"
+                     component={LoginAsUser}
+                  />
+                  {/* USERNAME ROUTE */}
+                  <Route exact path="/:username" component={UserPage} />
+                  <Route exact path="/post/:id" component={PostPage} />
+               </Switch>
+               <div
+                  style={{
+                     paddingBottom: 125,
+                  }}
+               ></div>
+               <Footer />
+            </Router>
+         </MUIThemeProvider>
+      </div>
    );
 }
 

@@ -7,11 +7,11 @@ import { Typography, makeStyles, Container } from '@material-ui/core';
 import LazyHero from 'react-lazy-hero';
 
 //components
-import VideoWithContent from '../Home/VideoWithContent';
+import VideoWithContent from './VideoWithContent';
 
 //video import
 import HeroVideo from '../../assets/hero.mp4';
-import HeroImage from '../../assets/hero.png';
+import HeroImage from '../../assets/InfluencerHero.png';
 import HeroBackground from '../../assets/HeroBackground.png';
 
 //usestyles
@@ -30,16 +30,17 @@ export default function Hero() {
          imageSrc={HeroBackground}
          minHeight="100vh"
          opacity="0.5"
-         parallaxOffset="100"
+         parallaxOffset="1"
       >
          <VideoWithContent
             imageLeft={true}
             title={
                <Typography variant="h2" className={classes.customLogo}>
-                  I AM A BRAND.
+                  <b>I'M AN INFLUENCER</b>
                </Typography>
             }
             vidUrl={HeroImage}
+            fullwidth={true}
          />
       </LazyHero>
    );

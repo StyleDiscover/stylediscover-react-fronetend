@@ -37,9 +37,9 @@ const useStyle = makeStyles({
       cursor: 'pointer',
       position: 'relative',
    },
-   ComponentImageRoot: {
-      backgroundPosition: 'top',
-   },
+   // ComponentImageRoot: {
+   //    backgroundPosition: 'top',
+   // },
    custonFavButton: {
       margin: 0,
       bottom: 3,
@@ -152,9 +152,9 @@ export default function NonEditableComponentPost({
                      onClick={handleClickOpen}
                      image={componentPostData.media_url}
                      className={classes.imgStyles}
-                     classes={{
-                        root: classes.ComponentImageRoot,
-                     }}
+                     // classes={{
+                     //    root: classes.ComponentImageRoot,
+                     // }}
                      title="Image"
                   >
                      <Fab

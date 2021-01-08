@@ -52,6 +52,7 @@ export default function VideoWithContent(props) {
       ctaText,
       vidUrl,
       ctaUrl,
+      fullwidth,
    } = props;
 
    const contentMarkup = (
@@ -80,13 +81,28 @@ export default function VideoWithContent(props) {
 
    const imageMarkup = (
       <div style={{ padding: 35 }}>
-         <Paper elevation="5" style={{ width: '250px', margin: 'auto' }}>
-            <CardMedia
-               image={vidUrl}
-               component="image"
-               style={{ paddingTop: '100%', height: 250, width: 250 }}
-            ></CardMedia>
-         </Paper>
+         {!fullwidth && (
+            <Paper elevation="5" style={{ width: '250px', margin: 'auto' }}>
+               <CardMedia
+                  image={vidUrl}
+                  component="image"
+                  style={{ paddingTop: '100%', height: 250, width: 250 }}
+               ></CardMedia>
+            </Paper>
+         )}
+         {fullwidth && (
+            <Paper elevation="5" style={{ width: '300px', margin: 'auto' }}>
+               <CardMedia
+                  image={vidUrl}
+                  component="image"
+                  style={{
+                     paddingTop: '100%',
+                     height: 0,
+                     width: 300,
+                  }}
+               ></CardMedia>
+            </Paper>
+         )}
       </div>
    );
 

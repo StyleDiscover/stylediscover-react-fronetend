@@ -1,9 +1,10 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 //home page components
-import Hero from '../components/Home/HeroHome';
-import ImageSlider from '../components/Home/ImageSlider';
-import ImageWithContent from '../components/Home/ImageWithContent';
+import Hero from '../components/Static/HeroHome';
+import ImageSlider from '../components/Static/ImageSlider';
+import ImageWithContent from '../components/Static/ImageWithContent';
 
 //assets
 import SectionOneImage from '../assets/SectionOne.png';
@@ -18,8 +19,14 @@ import Slider5 from '../assets/slider/5.jpeg';
 import Slider6 from '../assets/slider/6.jpg';
 
 //MUI Imports
-import { makeStyles, Typography } from '@material-ui/core';
-import Footer from '../components/Home/Footer';
+import {
+   Grid,
+   makeStyles,
+   Typography,
+   Link as MUILink,
+   Container,
+} from '@material-ui/core';
+import ContentInMiddle from '../components/Static/ContentInMiddle';
 
 //use styles
 const useStyles = makeStyles({
@@ -38,7 +45,7 @@ export default function Home() {
    const classes = useStyles();
 
    return (
-      <div style={{ minHeight: '100vh', position: 'relative' }}>
+      <div>
          <Hero />
          <div>
             <ImageWithContent
@@ -81,21 +88,6 @@ export default function Home() {
                      name: 'Urmi Daga',
                      sliderUrl: '/urmidaga',
                   },
-                  {
-                     imageUrls: Slider4,
-                     name: 'Devika Vaid',
-                     sliderUrl: '/devika_vaid',
-                  },
-                  {
-                     imageUrls: Slider5,
-                     name: 'Discoverherstyle',
-                     sliderUrl: '/discoverherstyle',
-                  },
-                  {
-                     imageUrls: Slider6,
-                     name: 'Littlesassyrealclassy',
-                     sliderUrl: '/littlesassyrealclassy',
-                  },
                ]}
                title={
                   <>
@@ -113,12 +105,49 @@ export default function Home() {
                }
             />
          </div>
-         <div
-            style={{
-               paddingBottom: 125,
-            }}
-         ></div>
-         <Footer />
+         <div className={classes.containerMargin}>
+            {' '}
+            {/* <ContentInMiddle background={false}> */}
+            <Container maxWidth="sm">
+               <Grid container={true} spacing={3}>
+                  <Grid item={true} xs={6} md={6} style={{ margin: 'auto' }}>
+                     <MUILink component={Link} to="/sd/iamabrand">
+                        <Typography
+                           variant="h5"
+                           style={{
+                              padding: '25px 0px',
+                              cursor: 'pointer',
+                              backgroundColor: '#4f5964',
+                              color: '#eacec5',
+                              borderRadius: 15,
+                           }}
+                           align="center"
+                        >
+                           I am a Brand
+                        </Typography>
+                     </MUILink>
+                  </Grid>
+                  <Grid item={true} xs={6} md={6} style={{ margin: 'auto' }}>
+                     <MUILink component={Link} to="/sd/iamaninfluencer">
+                        <Typography
+                           variant="h5"
+                           style={{
+                              padding: '25px 0px',
+                              cursor: 'pointer',
+                              backgroundColor: '#4f5964',
+                              color: '#eacec5',
+                              borderRadius: 15,
+                           }}
+                           align="center"
+                        >
+                           I am an Influencer
+                        </Typography>
+                     </MUILink>
+                  </Grid>
+               </Grid>
+            </Container>
+            {/* </ContentInMiddle> */}
+         </div>
       </div>
    );
 }

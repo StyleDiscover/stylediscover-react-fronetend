@@ -11,14 +11,15 @@ import VideoWithContent from './VideoWithContent';
 
 //video import
 import HeroVideo from '../../assets/hero.mp4';
-import HeroImage from '../../assets/hero.png';
+import HeroImage from '../../assets/BrandHero.png';
 import HeroBackground from '../../assets/HeroBackground.png';
-import ImageWithContent from './ImageWithContent';
 
 //usestyles
 const useStyles = makeStyles({
    customLogo: {
-      fontFamily: 'Megrim',
+      fontFamily: 'Montserrat',
+      fontWeight: 500,
+      letterSpacing: 2,
    },
 });
 
@@ -30,25 +31,21 @@ export default function Hero() {
          imageSrc={HeroBackground}
          minHeight="100vh"
          opacity="0.5"
-         parallaxOffset="100"
+         parallaxOffset="1"
       >
          <VideoWithContent
             imageLeft={true}
             title={
-               <Typography variant="h1" className={classes.customLogo}>
-                  StyleDiscover
-               </Typography>
-            }
-            subtitle={
                <Typography
-                  variant="h4"
+                  variant="h2"
                   className={classes.customLogo}
-                  style={{ color: '#b66d79' }}
+                  align="center"
                >
-                  <b>Discover | Get Inspired | Shop</b>
+                  <b>I'M A BRAND</b>
                </Typography>
             }
             vidUrl={HeroImage}
+            fullwidth={false}
          />
       </LazyHero>
    );

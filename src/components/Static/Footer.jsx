@@ -88,9 +88,7 @@ export default function Footer() {
                >
                   <Typography
                      component={Link}
-                     onClick={() => {
-                        window.open('https://creators.stylediscover.in/');
-                     }}
+                     to="/sd/iamaninfluencer"
                      style={{
                         textDecoration: 'none',
                      }}
@@ -98,6 +96,27 @@ export default function Footer() {
                      variant="body1"
                   >
                      &nbsp;<b> I am a creator</b>
+                  </Typography>
+               </div>
+               <div
+                  style={{
+                     textAlign: 'center',
+                     display: 'flex',
+                     alignItems: 'center',
+                     justifyContent: 'center',
+                     padding: 5,
+                  }}
+               >
+                  <Typography
+                     component={Link}
+                     to="/sd/iamabrand"
+                     style={{
+                        textDecoration: 'none',
+                     }}
+                     color="primary"
+                     variant="body1"
+                  >
+                     &nbsp;<b> I am a brand</b>
                   </Typography>
                </div>
 

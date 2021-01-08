@@ -34,6 +34,7 @@ import {
 //MUI Icons Import
 import { Add, Close } from '@material-ui/icons';
 import NonEditableComponentPost from '../ComponentPost/NonEditableComponentPost';
+import CropperSD from './Cropper';
 
 //use styles
 const useStyle = makeStyles({
@@ -118,6 +119,7 @@ export default function AddComponents({
 
    //add component dialog states
    const [addDialogOpen, setAddDialogOpen] = useState(false);
+   const [cropDialogOpen, setCropDialogOpen] = useState(false);
    const [pageUrl, setPageUrl] = useState('');
    const [mediaUrl, setMediaUrl] = useState('');
    const [componentList, setComponentList] = useState([]);
@@ -153,6 +155,7 @@ export default function AddComponents({
    const handleUploadComponentImage = (event) => {
       if (event.target.files && event.target.files[0]) {
          setMediaUrl(event.target.files[0]);
+         handleCropDialogOpen();
       }
    };
 
@@ -215,6 +218,11 @@ export default function AddComponents({
          }
       }
       setMyComponents(user.userData.username, componentDispatch);
+   };
+
+   //for crop
+   const handleCropDialogOpen = () => {
+      setCropDialogOpen(true);
    };
 
    return (
@@ -334,6 +342,22 @@ export default function AddComponents({
                </Button>
             </DialogActions>
          </Dialog>
+
+         {/* CROPPING STARTS */}
+         <CropperSD
+            openDialog={cropDialogOpen}
+            image={mediaUrl}
+            mediaType={mediaUrl ? mediaUrl.type : 'image/jpeg'}
+            mediaName={mediaUrl ? mediaUrl.name : 'example.jpeg'}
+            handleSubmit={(croppedImage) => {
+               // setMediaPreview(croppedImage);
+            }}
+            handleSubmitFile={(file) => {
+               setMediaUrl(file);
+            }}
+            closeDialog={(close) => setCropDialogOpen(close)}
+         />
+         {/* CROPPING ENDS */}
       </div>
    );
 }

@@ -106,7 +106,11 @@ export default function ImageWithContent(props) {
       <Container
          maxWidth="xl"
          className={classes.customContaienr}
-         style={{ backgroundImage: `url(${background})` }}
+         style={{
+            background: `url(${background}) no-repeat center center fixed`,
+            backgroundSize: 'cover',
+            // minHeight: '100vh',
+         }}
       >
          <Container maxWidth="lg">
             <Grid container spacing={3}>
