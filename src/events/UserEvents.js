@@ -1,6 +1,13 @@
 //axios import
 import axios from 'axios';
-import { setMainPost } from './MainPostEvents';
+import { addWishlist } from './WishlistEvents';
+import { sendEventAnalytics } from './AnalyticsEvents';
+
+//facebook pixel
+import ReactPixel from 'react-facebook-pixel';
+
+//pixel
+ReactPixel.init('417164693036908');
 
 //Axios Settings
 axios.defaults.baseURL =
@@ -12,9 +19,16 @@ axios.defaults.baseURL =
 
 // EXPORT FUNTIONS
 //login event
-export const loginWithEmail = async (userData, userDispatch) => {
+export const loginWithEmail = async (
+   userData,
+   userDispatch,
+   post,
+   wishlist,
+   wishlistDispatch,
+   postUsername,
+   history
+) => {
    userDispatch({ type: 'LOADING' });
-
    const data = {
       username: userData.username,
       password: userData.password,
@@ -29,13 +43,31 @@ export const loginWithEmail = async (userData, userDispatch) => {
 
    await axios
       .post('/users/auth/login/', data, config)
-      .then((res) => {
+      .then(async (res) => {
          userDispatch({ type: 'AUTHENTICATE' });
          userDispatch({ type: 'UNSET_ERROR_DATA' });
          userDispatch({ type: 'SET_LOGIN_METHOD', data: 'email' });
          userDispatch({ type: 'SET_USER_DATA', data: res.data.user });
          const token = res.data.token.split(',')[1].split("'")[1];
-         _setAuthToken(token, userData.username);
+         _setAuthToken(token);
+         if (wishlist !== null && post !== null) {
+            const wishlistData = {
+               component_id: wishlist,
+            };
+            await addWishlist(
+               res.data.user.username,
+               wishlistData,
+               wishlistDispatch
+            ).then(() => {
+               sendEventAnalytics(
+                  res.data.user.id,
+                  post,
+                  wishlist,
+                  'add_wishlist'
+               );
+            });
+            history.push(`/wishlist?username=${postUsername}`);
+         }
          userDispatch({ type: 'NOT_LOADING' });
          window.location.reload(false);
       })
@@ -61,7 +93,7 @@ export const adminLoginAsUser = async (username, userDispatch, history) => {
          userDispatch({ type: 'SET_LOGIN_METHOD', data: 'email' });
          userDispatch({ type: 'SET_USER_DATA', data: res.data.user });
          token = res.data.token.split(',')[1].split("'")[1];
-         _setAuthToken(token, username);
+         _setAuthToken(token);
          userDispatch({ type: 'NOT_LOADING' });
          history.push('/profile');
          window.location.reload(false);
@@ -74,9 +106,16 @@ export const adminLoginAsUser = async (username, userDispatch, history) => {
 };
 
 //facebook login event
-export const loginWithFacebook = async (facebookData, userDispatch) => {
+export const loginWithFacebook = async (
+   facebookData,
+   userDispatch,
+   post,
+   wishlist,
+   wishlistDispatch,
+   postUsername,
+   history
+) => {
    userDispatch({ type: 'LOADING' });
-
    const config = {
       headers: {
          'Content-Type': 'application/json',
@@ -86,13 +125,32 @@ export const loginWithFacebook = async (facebookData, userDispatch) => {
 
    await axios
       .post('/users/auth/facebook/', facebookData, config)
-      .then((res) => {
+      .then(async (res) => {
          userDispatch({ type: 'AUTHENTICATE' });
          userDispatch({ type: 'UNSET_ERROR_DATA' });
          userDispatch({ type: 'SET_LOGIN_METHOD', data: 'facebook' });
          userDispatch({ type: 'SET_USER_DATA', data: res.data.user });
          const token = res.data.token.split(',')[1].split("'")[1];
-         _setAuthToken(token, res.data.user.username);
+         _setAuthToken(token);
+         if (wishlist !== null && post !== null) {
+            const wishlistData = {
+               component_id: wishlist,
+            };
+            await addWishlist(
+               res.data.user.username,
+               wishlistData,
+               wishlistDispatch
+            ).then(() => {
+               sendEventAnalytics(
+                  res.data.user.id,
+                  post,
+                  wishlist,
+                  'add_wishlist'
+               );
+            });
+            history.push(`/wishlist?username=${postUsername}`);
+            window.location.reload(false);
+         }
          userDispatch({ type: 'NOT_LOADING' });
          window.location.reload(false);
       })
@@ -115,21 +173,22 @@ export const updateUserInfo = async (userInfo, username, userDispatch) => {
       },
    };
 
-   await axios
+   const res = await axios
       .put(`/users/userinfo/${username}/`, userInfo, config)
-      .then((res) => {
+      .then(async (res) => {
          userDispatch({ type: 'UNSET_ERROR_DATA' });
          userDispatch({
             type: 'SET_USER_PROFILE_PICTURE',
             data: res.data.profile_picture,
          });
-         window.location.reload(false);
+         return res.status;
       })
       .catch((e) => {
-         userDispatch({ type: 'UNSET_STATE' });
          userDispatch({ type: 'SET_ERROR_DATA', data: e.response.data });
+         return e.response.status;
       });
    userDispatch({ type: 'NOT_LOADING' });
+   return res;
 };
 
 //update username event
@@ -151,7 +210,6 @@ export const updateUsername = async (userInfo, userId, userDispatch) => {
             type: 'SET_USERNAME',
             data: res.data.username,
          });
-         localStorage.setItem('Username', res.data.username);
       })
       .catch((e) => {
          userDispatch({ type: 'SET_ERROR_DATA', data: e.response.data });
@@ -160,7 +218,15 @@ export const updateUsername = async (userInfo, userId, userDispatch) => {
 };
 
 //register event
-export const registerWithEmail = async (userData, userDispatch) => {
+export const registerWithEmail = async (
+   userData,
+   userDispatch,
+   post,
+   wishlist,
+   wishlistDispatch,
+   postUsername,
+   history
+) => {
    userDispatch({ type: 'LOADING' });
 
    const config = {
@@ -172,13 +238,33 @@ export const registerWithEmail = async (userData, userDispatch) => {
 
    await axios
       .post('/users/auth/registration/', userData, config)
-      .then((res) => {
+      .then(async (res) => {
          userDispatch({ type: 'AUTHENTICATE' });
          userDispatch({ type: 'UNSET_ERROR_DATA' });
          userDispatch({ type: 'SET_LOGIN_METHOD', data: 'email' });
          userDispatch({ type: 'SET_USER_DATA', data: res.data.user });
          const token = res.data.token.split(',')[1].split("'")[1];
-         _setAuthToken(token, userData.username);
+         _setAuthToken(token);
+         if (wishlist !== null && post !== null) {
+            const wishlistData = {
+               component_id: wishlist,
+            };
+            await addWishlist(
+               res.data.user.username,
+               wishlistData,
+               wishlistDispatch
+            ).then(() => {
+               sendEventAnalytics(
+                  res.data.user.id,
+                  post,
+                  wishlist,
+                  'add_wishlist'
+               );
+            });
+            ReactPixel.track('CompleteRegistration');
+            history.push(`/wishlist?username=${postUsername}`);
+         }
+         ReactPixel.track('CompleteRegistration');
       })
       .catch((e) => {
          userDispatch({ type: 'UNSET_STATE' });
@@ -211,7 +297,6 @@ export const logoutAll = async (token, userDispatch) => {
          _unsetAuthToken();
       })
       .catch((e) => {
-         console.log(e.response.data);
          userDispatch({ type: 'UNSET_STATE' });
          userDispatch({ type: 'LOADING' });
          userDispatch({ type: 'SET_ERROR_DATA', data: e.response.data });
@@ -220,7 +305,13 @@ export const logoutAll = async (token, userDispatch) => {
 };
 
 //logout from all devices event
-export const logout = async (token, userDispatch) => {
+export const logout = async (
+   token,
+   userDispatch,
+   mainPostDispatch,
+   componentDispatch,
+   wishlistDispatch
+) => {
    userDispatch({ type: 'LOADING' });
 
    const data = {
@@ -241,8 +332,10 @@ export const logout = async (token, userDispatch) => {
          _unsetAuthToken();
       })
       .catch((e) => {
-         console.log(e.response.data);
          userDispatch({ type: 'UNSET_STATE' });
+         mainPostDispatch({ type: 'UNSET_STATE_LOGOUT' });
+         componentDispatch({ type: 'UNSET_STATE' });
+         wishlistDispatch({ type: 'UNSET_STATE' });
          userDispatch({ type: 'SET_ERROR_DATA', data: e.response.data });
       });
    userDispatch({ type: 'NOT_LOADING' });
@@ -262,10 +355,26 @@ export const setUserData = async (username, userDispatch) => {
          userDispatch({ type: 'SET_USER_DATA', data: res.data });
          axios.defaults.headers.common['Authorization'] = token;
       })
+      .catch((e) => {});
+   userDispatch({ type: 'NOT_LOADING' });
+};
+
+//set user data event
+export const getUserDataByUsername = async (username, userDispatch) => {
+   userDispatch({ type: 'LOADING' });
+   const token = localStorage.AccessToken;
+
+   const data = await axios
+      .get(`/users/userdetails/${username}/`)
+      .then((res) => {
+         userDispatch({ type: 'UNSET_ERROR_DATA' });
+         return res.data;
+      })
       .catch((e) => {
-         console.log(e.response.data);
+         return e.response.data;
       });
    userDispatch({ type: 'NOT_LOADING' });
+   return data;
 };
 
 //reset user password
@@ -286,7 +395,6 @@ export const resetPasswordSend = async (emailData, userDispatch) => {
          return res.status;
       })
       .catch((e) => {
-         console.log(e.response.data);
          userDispatch({ type: 'UNSET_STATE' });
          userDispatch({ type: 'SET_ERROR_DATA', data: e.response.data });
          return 0;
@@ -314,7 +422,6 @@ export const resetPasswordConfirm = async (newPasswordData, userDispatch) => {
          return res.status;
       })
       .catch((e) => {
-         console.log(e.response.data);
          userDispatch({ type: 'UNSET_STATE' });
          userDispatch({ type: 'SET_ERROR_DATA', data: e.response.data });
          return 0;
@@ -324,18 +431,37 @@ export const resetPasswordConfirm = async (newPasswordData, userDispatch) => {
    return result;
 };
 
+//get username from token
+export const getUserDataByToken = async (token, userDispatch) => {
+   userDispatch({ type: 'LOADING' });
+
+   axios.defaults.headers.common['Authorization'] = token;
+
+   const data = await axios
+      .get(`/users/getusers/`)
+      .then((res) => {
+         userDispatch({ type: 'AUTHENTICATE' });
+         userDispatch({ type: 'UNSET_ERROR_DATA' });
+         userDispatch({ type: 'SET_USER_DATA', data: res.data });
+         return res.data;
+      })
+      .catch((e) => {
+         return e.response.data;
+      });
+   userDispatch({ type: 'NOT_LOADING' });
+   return data;
+};
+
 //INTERNAL FUNCTIONS
 //set local storage values
-const _setAuthToken = async (token, username) => {
+const _setAuthToken = async (token) => {
    const AccessToken = `Bearer ${token}`;
    localStorage.setItem('AccessToken', AccessToken);
-   localStorage.setItem('Username', username);
    axios.defaults.headers.common['Authorization'] = AccessToken;
 };
 
 //remove local storage values
 const _unsetAuthToken = async () => {
    localStorage.removeItem('AccessToken');
-   localStorage.removeItem('Username');
    delete axios.defaults.headers.common['Authorization'];
 };

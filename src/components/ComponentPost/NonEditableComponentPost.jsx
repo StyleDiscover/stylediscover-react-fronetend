@@ -4,6 +4,9 @@ import React, { useState, useEffect, useContext } from 'react';
 //for history
 import { useHistory } from 'react-router-dom';
 
+//crypto imports
+import AES from 'crypto-js/aes';
+
 //context and events
 import { WishlistContext } from '../../context/WishlistContext';
 import { UserContext } from '../../context/UserContext';
@@ -79,6 +82,7 @@ export default function NonEditableComponentPost({
    componentId,
    mainPostId,
    userId,
+   postUsername,
 }) {
    //MUI style classes
    const classes = useStyle();
@@ -94,6 +98,25 @@ export default function NonEditableComponentPost({
    //use context
    const { wishlists, wishlistDispatch } = useContext(WishlistContext);
    const { user } = useContext(UserContext);
+
+   //encrtypted ID
+   const encryptedWishlistId = AES.encrypt(
+      `${componentId}`,
+      '2yPNdoy1yRQz5gDkg5mx'
+   )
+      .toString()
+      .replace(/\//g, '*');
+
+   const encryptedPostId = AES.encrypt(`${mainPostId}`, 'Pjmaq7EV2C7lQeaUuLVD')
+      .toString()
+      .replace(/\//g, '*');
+
+   const encryptedUsername = AES.encrypt(
+      `${postUsername}`,
+      'DatLp5Rm7RnHe8kk3KbY'
+   )
+      .toString()
+      .replace(/\//g, '*');
 
    useEffect(() => {
       getComponentById(componentId).then((data) => setComponentPostData(data));
@@ -138,7 +161,9 @@ export default function NonEditableComponentPost({
             });
          }
       } else {
-         history.push('/login');
+         history.push(
+            `/login?wishlist=${encryptedWishlistId}&post=${encryptedPostId}&username=${encryptedUsername}`
+         );
       }
    };
 

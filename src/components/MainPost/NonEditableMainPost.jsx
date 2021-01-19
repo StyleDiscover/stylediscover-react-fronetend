@@ -159,6 +159,7 @@ export default function NonEditableMainPost({ id }) {
                                     componentId={componentId}
                                     mainPostId={mainPostData.id}
                                     userId={mainPostData.user_id}
+                                    postUsername={mainPostData.username}
                                  />
                               </Grid>
                            );

@@ -1,6 +1,6 @@
 //react imports
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 
 //MUI Imports
 import {
@@ -44,7 +44,10 @@ export default function ImageSlider(props) {
    const classes = useStyles();
 
    //get props
-   const { data, title } = props;
+   const { data, title, exploreMore } = props;
+
+   //history
+   const history = useHistory();
 
    //markups
    const gridListTileMarkup = data.map((item) => {
@@ -75,8 +78,25 @@ export default function ImageSlider(props) {
       );
    });
 
+   const exploreMarkup = (
+      <Button
+         fullWidth={true}
+         color="primary"
+         variant="outlined"
+         endIcon={<ArrowForwardIos />}
+         onClick={() => history.push('/sd/explore')}
+      >
+         Explore More
+      </Button>
+   );
+
    return (
-      <Container maxWidth="lg" style={{ overflow: 'hidden' }}>
+      <Container
+         maxWidth="lg"
+         style={{
+            overflow: 'hidden',
+         }}
+      >
          <div style={{ marginBottom: 37.5 }}>{title}</div>
          <Hidden only={['xs']}>
             <GridList
@@ -88,6 +108,10 @@ export default function ImageSlider(props) {
             >
                {gridListTileMarkup}
             </GridList>
+            <br />
+            <br />
+            <br />
+            {exploreMore && exploreMarkup}
          </Hidden>
          <Hidden smUp>
             <GridList
@@ -98,6 +122,7 @@ export default function ImageSlider(props) {
             >
                {gridListTileMarkup}
             </GridList>
+            {exploreMore && exploreMarkup}
          </Hidden>
       </Container>
    );

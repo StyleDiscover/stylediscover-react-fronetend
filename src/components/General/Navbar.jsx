@@ -4,6 +4,9 @@ import { Link } from 'react-router-dom';
 
 //context and events
 import { UserContext } from '../../context/UserContext';
+import { MainPostContext } from '../../context/MainPostContext';
+import { MyComponentsContext } from '../../context/MyComponentContext';
+import { WishlistContext } from '../../context/WishlistContext';
 import { logout, logoutAll } from '../../events/UserEvents';
 
 //MUI Core imports
@@ -38,6 +41,7 @@ import {
    Info,
    SupervisorAccount,
    CollectionsBookmark,
+   InsertChartOutlined,
 } from '@material-ui/icons';
 
 //use style
@@ -74,6 +78,9 @@ function HideOnScroll(props) {
 export default function Navbar(props) {
    // get user dispatch
    const { user, userDispatch } = useContext(UserContext);
+   const { mainPostDispatch } = useContext(MainPostContext);
+   const { wishlistDispatch } = useContext(WishlistContext);
+   const { componentDispatch } = useContext(MyComponentsContext);
 
    //states
    const [drawer, setDrawer] = useState(false);
@@ -84,7 +91,13 @@ export default function Navbar(props) {
    //logout function
    const handleLogout = (event) => {
       const token = localStorage.AccessToken;
-      logout(token, userDispatch);
+      logout(
+         token,
+         userDispatch,
+         mainPostDispatch,
+         componentDispatch,
+         wishlistDispatch
+      );
    };
 
    const handleLogoutAll = (event) => {
@@ -189,6 +202,20 @@ export default function Navbar(props) {
                   </ListItemIcon>
                   <ListItemText primary="My Collections" />
                </ListItem>
+               {user.userData.account_type !== 'PR' && (
+                  <ListItem
+                     button
+                     key="analytics"
+                     component={Link}
+                     to="/analytics"
+                  >
+                     <ListItemIcon>
+                        {' '}
+                        <InsertChartOutlined />
+                     </ListItemIcon>
+                     <ListItemText primary="Analytics" />
+                  </ListItem>
+               )}
             </List>
          )}
          {user.isAuthenticated && user.userData.account_type === 'AD' && (

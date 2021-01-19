@@ -1,0 +1,21 @@
+export const ROOT = '/';
+export const ABOUT_US = '/sd/aboutus';
+export const I_AM_BRAND = '/sd/iamabrand';
+export const EXPLORE = '/sd/explore';
+export const I_AM_INFLUENCER = '/sd/iamaninfluencer';
+export const T_AND_C = '/policy/termsandconditions';
+export const PRIVACY_POLICY = '/policy/privacy';
+export const LOGIN = '/login';
+export const SIGNUP = '/signup';
+export const PASSWORD_RESET = '/password/reset';
+export const CREATE = '/create';
+export const PROFILE = '/profile';
+export const WISHLIST = '/wishlist';
+export const ANALYTICS = '/analytics';
+export const MY_COLLECTION = '/mycollection';
+export const CHANGE_USERNAME = '/firsttimelogin/changeusername';
+export const PASSWOD_RESET_CONFIRM =
+   '/users/password/reset/confirm/:uid/:token';
+export const LOGIN_AS_USER = '/sd/admin/loginasuser';
+export const USER_PAGE = '/:username';
+export const POST_PAGE = '/post/:id';

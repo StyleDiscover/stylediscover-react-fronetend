@@ -38,7 +38,7 @@ import {
    getMainPostById,
    getSiteRecord,
 } from '../../events/MainPostEvents';
-import CropperSD from '../General/Cropper';
+import CropperSD from '../../legacy/Cropper';
 
 //style MUI
 const useStyle = makeStyles({

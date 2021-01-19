@@ -7,7 +7,7 @@ import AES from 'crypto-js/aes';
 
 //import component
 import EditableComponentPost from '../ComponentPost/EditableComponentPost';
-import AddComponents from '../General/AddComponents';
+import AddComponents from '../../legacy/AddComponents';
 
 //time ago
 import TimeAgo from 'react-timeago';
@@ -44,6 +44,7 @@ import {
 
 //MUI Icons imports
 import { Delete, Edit, MoreVert } from '@material-ui/icons';
+import CropperSD from '../../legacy/Cropper';
 
 //MUI make style
 const useStyles = makeStyles({
@@ -100,6 +101,7 @@ export default function EditableMainPost({ id }) {
 
    //edit dialog
    const [changeDialogOpen, setChangeDialogOpen] = useState(false);
+   const [cropDialogOpen, setCropDialogOpen] = useState(false);
    const [mediaUrl, setMediaUrl] = useState('');
 
    //deelte dialog
@@ -146,6 +148,7 @@ export default function EditableMainPost({ id }) {
       if (event.target.files && event.target.files[0]) {
          setMediaPreview(URL.createObjectURL(event.target.files[0]));
          setMediaUrl(event.target.files[0]);
+         // handleCropDialogOpen();
       }
    };
 
@@ -168,6 +171,11 @@ export default function EditableMainPost({ id }) {
       });
       handleChangeDialogClose();
       CloseEditMenu();
+   };
+
+   //for crop
+   const handleCropDialogOpen = () => {
+      setCropDialogOpen(true);
    };
 
    //for Delete dialog
@@ -358,6 +366,22 @@ export default function EditableMainPost({ id }) {
             </MenuItem>
          </Menu>
          {/* EDIT MENU ITEMS ENDS */}
+
+         {/* CROPPING STARTS */}
+         {/* <CropperSD
+            openDialog={cropDialogOpen}
+            image={mediaUrl}
+            mediaType={mediaUrl ? mediaUrl.type : 'image/jpeg'}
+            mediaName={mediaUrl ? mediaUrl.name : 'example.jpeg'}
+            handleSubmit={(croppedImage) => {
+               setMediaPreview(croppedImage);
+            }}
+            handleSubmitFile={(file) => {
+               setMediaUrl(file);
+            }}
+            closeDialog={(close) => setCropDialogOpen(close)}
+         /> */}
+         {/* CROPPING ENDS */}
 
          {/* ADD COMPONENT STARTS */}
          {mainPostData && (

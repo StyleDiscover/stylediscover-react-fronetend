@@ -56,6 +56,14 @@ export const mainPostReducer = (state, action) => {
 
       case 'UNSET_STATE':
          return state;
+
+      case 'UNSET_STATE_LOGOUT':
+         return {
+            loading: false,
+            mainPosts: [],
+            errorData: {},
+         };
+
       default:
          return state;
    }

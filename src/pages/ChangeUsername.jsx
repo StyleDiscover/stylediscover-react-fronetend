@@ -86,102 +86,100 @@ export default function ChangeUsername(props) {
    }
 
    return (
-      <Container className="margin-top-80" maxWidth="sm">
-         <Paper className={classes.paperStyles}>
-            <Typography variant="h4">Change Username</Typography>
-            {!user.userData.modified_username && (
-               <div
-                  style={{
-                     marginTop: 10,
-                  }}
-               >
-                  <Typography variant="body1">
-                     Your randomly generated username is{' '}
-                     <b>{`${user.userData.username}`}</b>
-                  </Typography>
-                  <Typography variant="body2">
-                     Do you wnat to change it?
-                  </Typography>
-               </div>
-            )}
-            {user.userData.modified_username && (
-               <div
-                  style={{
-                     marginTop: 10,
-                  }}
-               >
-                  <Typography variant="body1">Username Changed.</Typography>
-                  {/* <Typography variant="body2">
+      <div>
+         <Typography variant="h4">Change Username</Typography>
+         {!user.userData.modified_username && (
+            <div
+               style={{
+                  marginTop: 10,
+               }}
+            >
+               <Typography variant="body1">
+                  Your randomly generated username is{' '}
+                  <b>{`${user.userData.username}`}</b>
+               </Typography>
+               <Typography variant="body2">
+                  Do you wnat to change it?
+               </Typography>
+            </div>
+         )}
+         {user.userData.modified_username && (
+            <div
+               style={{
+                  marginTop: 10,
+               }}
+            >
+               <Typography variant="body1">Username Changed.</Typography>
+               {/* <Typography variant="body2">
                      Do you wnat to change it?
                   </Typography> */}
-               </div>
+            </div>
+         )}
+         <form noValidate>
+            <TextField
+               id="username"
+               name="username"
+               size="small"
+               fullWidth={true}
+               label="New Username"
+               type="text"
+               value={newUsername}
+               helperText={
+                  user.errorData.username ? user.errorData.username[0] : null
+               }
+               error={user.errorData.username ? true : false}
+               onChange={handleChange}
+               className={classes.inputStyles}
+               variant="outlined"
+               disabled={user.userData.modified_username}
+            />
+            <br />
+            {user.errorData.detail && (
+               <Typography variant="body2" className={classes.customError}>
+                  {user.errorData.detail}
+               </Typography>
             )}
-            <form noValidate>
-               <TextField
-                  id="username"
-                  name="username"
-                  size="small"
-                  fullWidth={true}
-                  label="New Username"
-                  type="text"
-                  value={newUsername}
-                  helperText={
-                     user.errorData.username ? user.errorData.username[0] : null
-                  }
-                  error={user.errorData.username ? true : false}
-                  onChange={handleChange}
-                  className={classes.inputStyles}
+            <div className="usernameLogin">
+               <Button
+                  type="submit"
+                  color="primary"
                   variant="outlined"
-                  disabled={user.userData.modified_username}
-               />
-               <br />
-               {user.errorData.detail && (
-                  <Typography variant="body2" className={classes.customError}>
-                     {user.errorData.detail}
-                  </Typography>
-               )}
-               <div className="usernameLogin">
-                  <Button
-                     type="submit"
-                     color="primary"
-                     variant="outlined"
-                     disableElevation
-                     className={classes.submitStyles}
-                     disabled={user.loading || user.userData.modified_username}
-                     onClick={handleSubmitNo}
-                  >
-                     No
-                     {newUsername === '' && user.loading && (
-                        <CircularProgress
-                           size={20}
-                           className={classes.customProgress}
-                        />
-                     )}
-                  </Button>
-                  <Button
-                     type="submit"
-                     color="primary"
-                     variant="contained"
-                     disableElevation
-                     className={classes.submitStyles}
-                     disabled={
-                        newUsername === '' ||
-                        user.loading ||
-                        user.userData.modified_username
-                     }
-                     onClick={handleSubmitChange}
-                  >
-                     Change Username
-                     {newUsername === '' && user.loading && (
-                        <CircularProgress
-                           size={20}
-                           className={classes.customProgress}
-                        />
-                     )}
-                  </Button>
-               </div>
-            </form>
-         </Paper>
-      </Container>
+                  disableElevation
+                  className={classes.submitStyles}
+                  disabled={user.loading || user.userData.modified_username}
+                  onClick={handleSubmitNo}
+               >
+                  No
+                  {newUsername === '' && user.loading && (
+                     <CircularProgress
+                        size={20}
+                        className={classes.customProgress}
+                     />
+                  )}
+               </Button>
+               <Button
+                  type="submit"
+                  color="primary"
+                  variant="contained"
+                  disableElevation
+                  className={classes.submitStyles}
+                  disabled={
+                     newUsername === '' ||
+                     user.loading ||
+                     user.userData.modified_username
+                  }
+                  onClick={handleSubmitChange}
+               >
+                  Change Username
+                  {newUsername === '' && user.loading && (
+                     <CircularProgress
+                        size={20}
+                        className={classes.customProgress}
+                     />
+                  )}
+               </Button>
+            </div>
+         </form>
+      </div>
    );
 }

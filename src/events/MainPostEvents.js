@@ -240,6 +240,32 @@ export const getSiteMedia = async (hostname, url, mainPostDispatch) => {
    return site_media_url;
 };
 
+//sending email
+export const sendEmailToAdmin = async (subject, message, username) => {
+   const data = {
+      subject,
+      message,
+      username,
+   };
+
+   const config = {
+      headers: {
+         'Content-Type': 'application/json',
+         'X-CSRFToken': '{{csrf_token}}',
+      },
+   };
+
+   const status = await axios
+      .post('/mainposts/sendemail/', data, config)
+      .then((res) => {
+         return res.status;
+      })
+      .catch((e) => {
+         return 400;
+      });
+   return status;
+};
+
 //INTERNAL FUNCTIONS
 //for main post
 const _addComponentsToMainPost = async (

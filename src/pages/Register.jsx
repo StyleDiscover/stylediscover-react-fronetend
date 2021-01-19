@@ -1,8 +1,13 @@
 //react imports
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
+
+//crypto imports
+import AES from 'crypto-js/aes';
+import enc from 'crypto-js/enc-utf8';
 
 //context and events
 import { UserContext } from '../context/UserContext';
+import { WishlistContext } from '../context/WishlistContext';
 import { registerWithEmail } from '../events/UserEvents';
 
 //MUI Imports
@@ -43,7 +48,7 @@ const useStyle = makeStyles({
    },
 });
 
-export default function Register() {
+export default function Register(props) {
    //states
    const [username, setUsername] = useState('');
    const [name, setName] = useState('');
@@ -51,12 +56,58 @@ export default function Register() {
    const [password, setPassword] = useState('');
    const [termAndCondition, setTermAndCondition] = useState(false);
    const [iAmBrand, setIAmBrand] = useState(false);
+   const [iAmInfluencer, setIAmInfluencer] = useState(false);
+   const [wishlistId, setWishlistId] = useState(null);
+   const [postId, setPostId] = useState(null);
+   const [postUsername, setPostUsername] = useState(null);
 
    //MUI classes
    const classes = useStyle();
 
    //context
    const { user, userDispatch } = useContext(UserContext);
+   const { wishlistDispatch } = useContext(WishlistContext);
+
+   //history
+   const { history } = props;
+
+   //use effect
+   //get wishlist
+   useEffect(() => {
+      const url_string = window.location.href;
+      const url = new URL(url_string);
+      if (url.searchParams.get('wishlist')) {
+         const wishlistIdEncrypted = url.searchParams
+            .get('wishlist')
+            .toString()
+            .replace(/ /g, '+')
+            .replace(/\*/g, '/');
+         const wishlistId = AES.decrypt(
+            wishlistIdEncrypted,
+            '2yPNdoy1yRQz5gDkg5mx'
+         ).toString(enc);
+         setWishlistId(wishlistId);
+      }
+      if (url.searchParams.get('post')) {
+         const postIdEncrypted = url.searchParams
+            .get('post')
+            .toString()
+            .replace(/ /g, '+')
+            .replace(/\*/g, '/');
+         const postId = AES.decrypt(
+            postIdEncrypted,
+            'Pjmaq7EV2C7lQeaUuLVD'
+         ).toString(enc);
+         setPostId(postId);
+      }
+      if (url.searchParams.get('username')) {
+         const postUsernameEncrypted = url.searchParams
+            .get('username')
+            .toString()
+            .replace(/ /g, '+');
+         setPostUsername(postUsernameEncrypted);
+      }
+   }, []);
 
    //funtions
    const handleChange = (event) => {
@@ -78,10 +129,18 @@ export default function Register() {
          name,
          email,
          password,
-         account_type: iAmBrand ? 'BR' : 'PR',
+         account_type: iAmBrand ? 'BR' : iAmInfluencer ? 'FI' : 'PR',
          modified_username: true,
       };
-      await registerWithEmail(userData, userDispatch);
+      await registerWithEmail(
+         userData,
+         userDispatch,
+         postId,
+         wishlistId,
+         wishlistDispatch,
+         postUsername,
+         history
+      );
    };
 
    return (
@@ -184,6 +243,22 @@ export default function Register() {
                         color="primary"
                         checked={iAmBrand}
                         onChange={() => setIAmBrand(!iAmBrand)}
+                        disabled={iAmInfluencer}
+                     />
+                  }
+                  labelPlacement="end"
+               />
+               <br />
+               <FormControlLabel
+                  label={
+                     <Typography variant="body2">I am an Influencer</Typography>
+                  }
+                  control={
+                     <Checkbox
+                        color="primary"
+                        checked={iAmInfluencer}
+                        onChange={() => setIAmInfluencer(!iAmInfluencer)}
+                        disabled={iAmBrand}
                      />
                   }
                   labelPlacement="end"

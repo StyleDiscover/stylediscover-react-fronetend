@@ -13,7 +13,7 @@ export const setMyComponents = async (username, componentDispatch) => {
    componentDispatch({ type: 'LOADING' });
    let componentList = [];
    let counts = {};
-
+   // console.log(username);
    if (username) {
       const userComponents = await _getUserComponents(
          username,
