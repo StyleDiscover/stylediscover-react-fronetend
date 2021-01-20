@@ -23,7 +23,7 @@ import {
 import { Add } from '@material-ui/icons';
 
 //components
-import WishlistComponent from '../components/Wishlist/WishlistComponent';
+import WishlistComponent from './Wishlist/WishlistComponent';
 import NonEditableComponentPost from './ComponentPost/NonEditableComponentPost';
 
 //MUI Make Styles

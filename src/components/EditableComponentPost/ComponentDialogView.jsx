@@ -38,8 +38,10 @@ export default function ComponentDialogView({
    userId,
    mainPostId,
    componentId,
+   getWebsiteFromUrl,
 }) {
    const classes = useStyle();
+
    return (
       componentPostData && (
          <Dialog onClose={handleClose} open={open} maxWidth="sm" fullWidth>
@@ -68,7 +70,7 @@ export default function ComponentDialogView({
                   }}
                   disableElevation
                >
-                  Buy on {componentPostData.site_records.shop_site}
+                  Buy on {getWebsiteFromUrl(componentPostData.page_url)}
                </Button>
             </DialogContent>
             <DialogActions>

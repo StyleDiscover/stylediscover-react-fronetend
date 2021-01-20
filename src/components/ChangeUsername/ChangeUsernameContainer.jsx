@@ -1,10 +1,10 @@
 //react imports
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState, useEffect, Suspense } from 'react';
 
 //context and events import
 import { UserContext } from 'context/UserContext';
 import { updateUsername } from 'events/UserEvents';
-import ChangeUsernameView from './ChangeUsernameView';
+const ChangeUsernameView = React.lazy(() => import('./ChangeUsernameView'));
 
 export function ChangeUsernameContainer() {
    //use state
@@ -37,12 +37,14 @@ export function ChangeUsernameContainer() {
 
    return (
       <div>
-         <ChangeUsernameView
-            user={user}
-            newUsername={newUsername}
-            handleChange={handleChange}
-            handleSubmitChange={handleSubmitChange}
-         />
+         <Suspense fallback={<>Loading...</>}>
+            <ChangeUsernameView
+               user={user}
+               newUsername={newUsername}
+               handleChange={handleChange}
+               handleSubmitChange={handleSubmitChange}
+            />
+         </Suspense>
       </div>
    );
 }

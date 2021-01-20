@@ -15,6 +15,8 @@ import WishlistView from './WishlistView';
 import WishlistGoBackToUserView from './WishlistGoBackToUserView';
 import WishlistExploreCreatorsView from './WishlistExploreCreatorsView';
 
+import { LoadingBar } from 'components';
+
 export function WishlistContainer({ history }) {
    //state
    const [postUsername, setPostUsername] = useState(null);
@@ -50,7 +52,7 @@ export function WishlistContainer({ history }) {
             >
                Your Wishlist
             </Typography>
-
+            {wishlists.loading && <LoadingBar />}
             {wishlists.wishlists.length === 0 && (
                <Typography
                   style={{

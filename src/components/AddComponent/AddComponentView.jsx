@@ -1,5 +1,8 @@
 import React from 'react';
 
+//lazy loading
+import { loadable } from 'react-lazily/loadable';
+
 //MUI Imports
 import {
    makeStyles,
@@ -16,11 +19,8 @@ import {
    CardMedia,
 } from '@material-ui/core';
 
-//MUI Icons Import
-import { Add, Close } from '@material-ui/icons';
-
 //components import
-import { MyComponents } from 'components';
+const { MyComponents } = loadable(() => import('components'));
 
 //use styles
 const useStyle = makeStyles({

@@ -1,9 +1,6 @@
 //react imports
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState, useEffect, Suspense } from 'react';
 import { useHistory } from 'react-router-dom';
-
-//import my componsnts
-import { MyComponents } from 'components';
 
 //context and events imports
 import { MainPostContext } from 'context/MainPostContext';
@@ -16,7 +13,8 @@ import {
 } from 'events/MainPostEvents';
 import { setMyComponents } from 'events/MyComponentEvents';
 import { Cropper } from 'components';
-import AddComponentView from './AddComponentView';
+
+const AddComponentView = React.lazy(() => import('./AddComponentView'));
 
 export function AddComponentContainer({
    mediaType,
@@ -156,17 +154,19 @@ export function AddComponentContainer({
 
    return (
       <div>
-         <AddComponentView
-            handleAddDialogClose={handleAddDialogClose}
-            handleAddDialogSubmit={handleAddDialogSubmit}
-            handlePageUrlChange={handlePageUrlChange}
-            handleUploadComponentImage={handleUploadComponentImage}
-            addDialogOpen={addDialogOpen}
-            pageUrl={pageUrl}
-            mainPosts={mainPosts}
-            componentsSeleted={componentsSeleted}
-            mediaPreview={mediaPreview}
-         />
+         <Suspense fallback={<>Loading...</>}>
+            <AddComponentView
+               handleAddDialogClose={handleAddDialogClose}
+               handleAddDialogSubmit={handleAddDialogSubmit}
+               handlePageUrlChange={handlePageUrlChange}
+               handleUploadComponentImage={handleUploadComponentImage}
+               addDialogOpen={addDialogOpen}
+               pageUrl={pageUrl}
+               mainPosts={mainPosts}
+               componentsSeleted={componentsSeleted}
+               mediaPreview={mediaPreview}
+            />
+         </Suspense>
          {/* CROPPING STARTS */}
          <Cropper
             openDialog={cropDialogOpen}

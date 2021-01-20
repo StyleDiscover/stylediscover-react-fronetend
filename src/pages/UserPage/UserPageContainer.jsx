@@ -11,7 +11,7 @@ import { sendPageViewAnalytics } from 'events/AnalyticsEvents'; //analytics even
 import { getMainPost } from 'events/MainPostEvents';
 
 //components
-import { ProfileDetailView } from 'components';
+import { ProfileDetailView, LoadingBar } from 'components';
 
 //views import
 import UserPageNotFoundView from './UserPageNotFoundView';
@@ -27,11 +27,14 @@ export function UserPageContainer() {
 
    //states
    const [userData, setUserData] = useState();
+   const [loading, setLoading] = useState(false);
 
    //useeffect
    useEffect(() => {
+      setLoading(true);
       getMainPost(username, mainPostDispatch).then((data) => {
          setUserData(data);
+         setLoading(false);
          if (data.id) {
             sendPageViewAnalytics(data.id);
          }
@@ -44,12 +47,14 @@ export function UserPageContainer() {
 
          {userData && userData.username && (
             <div>
-               <ProfileDetailView userData={userData} />
+               <ProfileDetailView userData={userData} displayName={false} />
                <br />
                <UserPagePostsView userData={userData} />
                {userData.main_posts.length === 0 && <UserPageNoPostsView />}
             </div>
          )}
+
+         {loading && <LoadingBar />}
       </Container>
    );
 }

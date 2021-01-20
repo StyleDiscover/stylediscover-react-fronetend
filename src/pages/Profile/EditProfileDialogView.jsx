@@ -1,5 +1,8 @@
 import React from 'react';
 
+//lazy loading
+import { loadable } from 'react-lazily/loadable';
+
 //MUI Imports
 import {
    makeStyles,
@@ -18,7 +21,7 @@ import { Close, ArrowBack } from '@material-ui/icons';
 
 //component improts
 import EditProfilePictureVeiw from './EditProfilePictureVeiw';
-import { EditProfileForm } from '.';
+const { EditProfileForm } = loadable(() => import('.'));
 
 //use styles
 const useStyles = makeStyles({

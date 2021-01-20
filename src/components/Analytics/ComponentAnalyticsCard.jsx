@@ -1,13 +1,11 @@
 //react imports
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 
 //MUI Imports
 import {
    Paper,
-   Divider,
    makeStyles,
    Typography,
-   ListItemText,
    ListItem,
    ListItemAvatar,
    ListItemSecondaryAction,
@@ -20,7 +18,7 @@ import {
 } from '@material-ui/core';
 
 //component events import
-import { getComponentById } from '../../events/MainPostEvents';
+import { getComponentById } from 'events/MainPostEvents';
 
 //style MUI
 const useStyle = makeStyles({

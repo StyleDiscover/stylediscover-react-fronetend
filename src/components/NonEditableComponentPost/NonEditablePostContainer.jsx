@@ -105,6 +105,15 @@ export function NonEditablePostContainer({
       }
    };
 
+   //for component dialog
+   const getWebsiteFromUrl = (url) => {
+      if (url.toString().split('://')[1].split('.').length > 2) {
+         return url.toString().split('://')[1].split('.')[1];
+      } else {
+         return url.toString().split('://')[1].split('.')[0];
+      }
+   };
+
    return (
       <div>
          {componentPostData && (
@@ -127,6 +136,7 @@ export function NonEditablePostContainer({
                open={open}
                sendEventAnalytics={sendEventAnalytics}
                userId={userId}
+               getWebsiteFromUrl={getWebsiteFromUrl}
             />
          )}
       </div>

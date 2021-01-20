@@ -28,7 +28,7 @@ import Navbar from './components/General/Navbar';
 import Theme from './utils/Theme';
 import Footer from './components/Static/Footer';
 
-import ScrollToTop from './components/General/ScrollToTop';
+import ScrollToTop from 'components/General/ScrollToTop';
 import PublicRoutes from './navigation/PublicRoutes';
 
 //theme

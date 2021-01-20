@@ -70,8 +70,10 @@ export default function ComponentDialogView({
    componentId,
    wishlists,
    handleWishlist,
+   getWebsiteFromUrl,
 }) {
    const classes = useStyle();
+
    return (
       <Dialog onClose={handleClose} open={open} maxWidth="sm" fullWidth>
          <DialogContent className={classes.customDialogContent}>
@@ -99,7 +101,7 @@ export default function ComponentDialogView({
                }}
                disableElevation
             >
-               Buy on {componentPostData.site_records.shop_site}
+               Buy on {getWebsiteFromUrl(componentPostData.page_url)}
             </Button>
             <br />
             <Button

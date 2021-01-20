@@ -32,28 +32,28 @@ import AuthRoute from 'utils/AuthRoute';
 import UnAuthRoute from 'utils/UnAuthRoute';
 import AdminRoute from 'utils/AdminRoute';
 
+import { loadable } from 'react-lazily/loadable';
+
 //page imports
-import {
-   Home,
-   AboutUs,
-   TermsAndConditions,
-   ExploreMore,
-   IAmBrand,
-   IAmInfluencer,
-   PrivacyPolicy,
-   Profile,
-   Create,
-   Analytics,
-   UserPage,
-   Login,
-   LoginAsUser,
-   MyCollection,
-   PostPage,
-   Register,
-   ResetPassword,
-   ResetPasswordConfirm,
-   Wishlist,
-} from 'pages';
+const { Home } = loadable(() => import('pages'));
+const { AboutUs } = loadable(() => import('pages'));
+const { TermsAndConditions } = loadable(() => import('pages'));
+const { ExploreMore } = loadable(() => import('pages'));
+const { IAmBrand } = loadable(() => import('pages'));
+const { IAmInfluencer } = loadable(() => import('pages'));
+const { PrivacyPolicy } = loadable(() => import('pages'));
+const { Profile } = loadable(() => import('pages'));
+const { Create } = loadable(() => import('pages'));
+const { Analytics } = loadable(() => import('pages'));
+const { UserPage } = loadable(() => import('pages'));
+const { Login } = loadable(() => import('pages'));
+const { LoginAsUser } = loadable(() => import('pages'));
+const { MyCollection } = loadable(() => import('pages'));
+const { PostPage } = loadable(() => import('pages'));
+const { Register } = loadable(() => import('pages'));
+const { ResetPassword } = loadable(() => import('pages'));
+const { ResetPasswordConfirm } = loadable(() => import('pages'));
+const { Wishlist } = loadable(() => import('pages'));
 
 export default function PublicRoutes() {
    return (

@@ -33,7 +33,7 @@ import chairImg from '../assets/slider/4.png';
 import discoverherstyleImg from '../assets/slider/5.jpeg';
 
 //components
-import WishlistComponent from '../components/Wishlist/WishlistComponent';
+import WishlistComponent from './Wishlist/WishlistComponent';
 import NonEditableComponentPost from './ComponentPost/NonEditableComponentPost';
 import ImageSlider from '../components/Static/ImageSlider';
 

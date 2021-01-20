@@ -47,7 +47,7 @@ const useStyles = makeStyles({
    },
 });
 
-export function ProfileDetailView({ userData }) {
+export function ProfileDetailView({ userData, displayName = true }) {
    //use styles
    const classes = useStyles();
 
@@ -83,7 +83,7 @@ export function ProfileDetailView({ userData }) {
                   <Typography variant="h6" className={classes.customUsername}>
                      @{userData.username}
                   </Typography>
-                  {userData.name && (
+                  {userData.name && displayName && (
                      <Typography variant="body2" className={classes.customName}>
                         {userData.name}
                      </Typography>

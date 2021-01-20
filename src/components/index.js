@@ -18,3 +18,4 @@ export { DarkTooltip } from './General/DarkTooltipView';
 export { ProfileDetailView } from './General/ProfileDetailView';
 export { ChangeUsernameContainer as ChangeUsername } from './ChangeUsername/ChangeUsernameContainer';
 export { PostPageMainPostContainer as PostPageMainPost } from './PostPageMainPost/PostPageMainPostContainer';
+export { LoadingBar } from './General/LoadingBar';

@@ -144,8 +144,6 @@ export function EditableComponentPostContainer({
          );
       }
 
-      console.log(newComponentId);
-
       //edit main post
       var newMainPostData = new FormData();
       newComponentList.forEach((component) => {
@@ -155,7 +153,6 @@ export function EditableComponentPostContainer({
       await editMainPost(newMainPostData, mainPostId, mainPostDispatch).then(
          async () => {
             await getComponentById(newComponentId).then((data) => {
-               console.log(data);
                setComponentPostData(data);
                setPageUrl(data.page_url);
             });
@@ -208,6 +205,15 @@ export function EditableComponentPostContainer({
       setCropDialogOpen(true);
    };
 
+   //for component dialog
+   const getWebsiteFromUrl = (url) => {
+      if (url.toString().split('://')[1].split('.').length > 2) {
+         return url.toString().split('://')[1].split('.')[1];
+      } else {
+         return url.toString().split('://')[1].split('.')[0];
+      }
+   };
+
    return (
       <div>
          {componentPostData && (
@@ -227,6 +233,7 @@ export function EditableComponentPostContainer({
                sendEventAnalytics={sendEventAnalytics}
                userId={userId}
                mainPostId={mainPostId}
+               getWebsiteFromUrl={getWebsiteFromUrl}
             />
          )}
          <ChangeMediaDialogView

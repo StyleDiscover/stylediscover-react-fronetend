@@ -1,9 +1,11 @@
 //react imports
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 
 //component events import
 import { getComponentById } from 'events/MainPostEvents';
-import AnalyticsComponentListView from './AnalyticsComponentListView';
+const AnalyticsComponentListView = React.lazy(() =>
+   import('./AnalyticsComponentListView')
+);
 
 export function AnalyticsComponentListContainer({ componentId, metrics }) {
    //states
@@ -26,13 +28,15 @@ export function AnalyticsComponentListContainer({ componentId, metrics }) {
 
    return (
       <div>
-         <AnalyticsComponentListView
-            componentPostData={componentPostData}
-            handleClickOpen={handleClickOpen}
-            handleClose={handleClose}
-            open={open}
-            metrics={metrics}
-         />
+         <Suspense fallback={<>Loading...</>}>
+            <AnalyticsComponentListView
+               componentPostData={componentPostData}
+               handleClickOpen={handleClickOpen}
+               handleClose={handleClose}
+               open={open}
+               metrics={metrics}
+            />
+         </Suspense>
       </div>
    );
 }

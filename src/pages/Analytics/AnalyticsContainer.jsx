@@ -5,7 +5,7 @@ import { UserContext } from 'context/UserContext';
 import { getSummaryViews, getDetailsViews } from 'events/AnalyticsEvents';
 
 //components
-import { GoBackButton } from 'components';
+import { GoBackButton, LoadingBar } from 'components';
 import AnalyticsSummaryView from './AnalyticsSummaryView';
 import AnalyticsSummaryError from './AnalyticsSummaryError';
 import AnalyticsDetailsView from './AnalyticsDetailsView';
@@ -142,6 +142,8 @@ export function AnalyticsContainer() {
          {user.userData.username && user.userData.account_type === 'PR' && (
             <AnalyticsUnauthView />
          )}
+
+         {user.loading && <LoadingBar />}
       </div>
    );
 }

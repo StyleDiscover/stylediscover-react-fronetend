@@ -1,6 +1,9 @@
 import React, { useState, useContext } from 'react';
 import { useHistory } from 'react-router-dom';
 
+//lazy loading
+import { loadable } from 'react-lazily/loadable';
+
 //navigation constant
 import { ANALYTICS } from 'navigation/Constants';
 
@@ -15,9 +18,6 @@ import { sendEmailToAdmin } from 'events/MainPostEvents';
 //MUI imports
 import { Container, LinearProgress, Typography, Grid } from '@material-ui/core';
 
-//component imports
-import { CreateButton, EditableMainPost, ProfileDetailView } from 'components';
-
 //view imports
 import CopyRedirectView from './CopyRedirectView';
 import NoPostPRView from './NoPostPRView';
@@ -25,6 +25,11 @@ import NoPostNoEmailView from './NoPostNoEmailView';
 import NoPostEmailView from './NoPostEmailView';
 import ButtonGroupView from './ButtonGroupView';
 import EditProfileDialogView from './EditProfileDialogView';
+
+//components, ,
+const { EditableMainPost } = loadable(() => import('components'));
+const { CreateButton } = loadable(() => import('components'));
+const { ProfileDetailView } = loadable(() => import('components'));
 
 export function ProfileContainer() {
    //use context

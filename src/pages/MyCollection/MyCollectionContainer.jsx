@@ -9,7 +9,7 @@ import { MyComponentsContext } from 'context/MyComponentContext';
 import { Typography, Container, Grid, makeStyles } from '@material-ui/core';
 
 //components
-import { NonEditableComponentPost } from 'components';
+import { NonEditableComponentPost, LoadingBar } from 'components';
 import MyCollectionTitleView from './MyCollectionTitleView';
 import MyCollectionNoComponentView from './MyCollectionNoComponentView';
 
@@ -45,6 +45,8 @@ export function MyCollectionContainer() {
                </Typography>
                <MyCollectionTitleView />
                {/* WISHLIST TITLE ENDS */}
+
+               {myComponentData.loading && <LoadingBar />}
 
                {/* USER WISHLISTS STARTS */}
                {myComponentData.myCollection.length === 0 && (
