@@ -46,7 +46,7 @@ import {
 } from '@material-ui/icons';
 
 //components
-import EditableMainPOst from '../components/MainPost/EditableMainPost';
+import EditableMainPOst from './MainPost/EditableMainPost';
 import CopyRedirect from '../components/Profile/CopyRedirect';
 
 //MUI Make Styles

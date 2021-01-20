@@ -10,14 +10,13 @@ import { Typography, Container, Grid, makeStyles } from '@material-ui/core';
 
 //components
 import { NonEditableComponentPost } from 'components';
+import MyCollectionTitleView from './MyCollectionTitleView';
+import MyCollectionNoComponentView from './MyCollectionNoComponentView';
+
+//Views imports
 
 //MUI Make Styles
 const useStyles = makeStyles({
-   customNoPostMessage: {
-      fontFamily: 'Roboto, sans-serif',
-      fontWeight: '400',
-      textAlign: 'center',
-   },
    customTitle: {
       marginBottom: 20,
       textAlign: 'center',
@@ -44,16 +43,12 @@ export function MyCollectionContainer() {
                      ? user.userData.name
                      : user.userData.username}
                </Typography>
+               <MyCollectionTitleView />
                {/* WISHLIST TITLE ENDS */}
 
                {/* USER WISHLISTS STARTS */}
                {myComponentData.myCollection.length === 0 && (
-                  <Typography
-                     className={classes.customNoPostMessage}
-                     variant="body2"
-                  >
-                     No Product In Collection.
-                  </Typography>
+                  <MyCollectionNoComponentView />
                )}
                <Grid container={true} spacing={2}>
                   {myComponentData.myCollection.map((component, index) => (

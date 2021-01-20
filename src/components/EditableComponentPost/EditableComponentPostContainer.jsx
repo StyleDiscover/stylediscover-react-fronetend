@@ -12,7 +12,8 @@ import {
    getMainPostById,
    getSiteRecord,
    getSiteMedia,
-} from '../../events/MainPostEvents';
+   editComponent,
+} from 'events/MainPostEvents';
 
 //components imports
 import { Cropper } from 'components';
@@ -88,12 +89,12 @@ export function EditableComponentPostContainer({
 
    const handleChangeMedia = async (event) => {
       event.preventDefault();
+
       var siteRecords;
       var siteMediaUrl;
       var hostname;
-      var newComponentList = mainPostComponentList.filter(
-         (mainPostComponent) => mainPostComponent !== componentId
-      );
+      var newComponentList;
+      var newComponentId;
 
       //get the new media id
       if (pageUrl.startsWith('http')) {
@@ -117,20 +118,33 @@ export function EditableComponentPostContainer({
       );
       newComponentData.append('page_url', pageUrl);
       newComponentData.append('site_records', siteRecords);
-      newComponentData.append('is_scraped', siteMediaUrl ? true : false);
 
-      for (var value of newComponentData.values()) {
-         console.log(value);
-      }
       // get a new component id
-      const newComponentId = await addComponent(
-         newComponentData,
-         mainPostDispatch
-      );
-      console.log(newComponentId);
-      if (!newComponentList.includes(newComponentId) && newComponentId !== -1) {
-         newComponentList = [...newComponentList, newComponentId];
+
+      if (componentPostData.page_url !== pageUrl && mediaUrl) {
+         newComponentList = mainPostComponentList.filter(
+            (mainPostComponent) => mainPostComponent !== componentId
+         );
+         newComponentId = await addComponent(
+            newComponentData,
+            mainPostDispatch
+         );
+         if (
+            !newComponentList.includes(newComponentId) &&
+            newComponentId !== -1
+         ) {
+            newComponentList = [...newComponentList, newComponentId];
+         }
+      } else {
+         newComponentList = mainPostComponentList;
+         newComponentId = await editComponent(
+            newComponentData,
+            componentId,
+            mainPostDispatch
+         );
       }
+
+      console.log(newComponentId);
 
       //edit main post
       var newMainPostData = new FormData();
@@ -145,6 +159,9 @@ export function EditableComponentPostContainer({
                setComponentPostData(data);
                setPageUrl(data.page_url);
             });
+            await getMainPostById(mainPostId, mainPostDispatch).then((data) =>
+               refreshMainPost(data)
+            );
          }
       );
       componentId = newComponentId;

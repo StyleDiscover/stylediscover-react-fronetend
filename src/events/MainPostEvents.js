@@ -191,6 +191,33 @@ export const addComponent = async (componentData, mainPostDispatch) => {
    return componentId;
 };
 
+//edit component post
+export const editComponent = async (componentData, id, mainPostDispatch) => {
+   mainPostDispatch({ type: 'LOADING' });
+
+   const config = {
+      headers: {
+         'Content-Type': 'multipart/form-data',
+         'X-CSRFToken': '{{csrf_token}}',
+      },
+   };
+
+   const componentId = await axios
+      .put(`/editcomponent/${id}/`, componentData, config)
+      .then((res) => {
+         mainPostDispatch({ type: 'UNSET_ERROR_DATA' });
+         return res.data.id;
+      })
+      .catch((e) => {
+         mainPostDispatch({ type: 'UNSET_STATE' });
+         mainPostDispatch({ type: 'LOADING' });
+         mainPostDispatch({ type: 'SET_ERROR_DATA', data: e.response.data });
+         return -1;
+      });
+   mainPostDispatch({ type: 'NOT_LOADING' });
+   return componentId;
+};
+
 //get component data by id
 export const getComponentById = async (id) => {
    const componentData = await axios

@@ -7,7 +7,7 @@ import { UserContext } from '../context/UserContext';
 import { resetPasswordConfirm } from '../events/UserEvents';
 
 //components
-import LoginAfterResetScreen from '../components/ResetPassword/LoginAfterResetScreen';
+import LoginAfterResetScreen from '../pages/ResetPasswordConfirm/LoginAfterResetScreenView';
 
 //MUI Imports
 import {

@@ -48,15 +48,19 @@ function App() {
       //get token
       const token = localStorage.AccessToken;
 
-      getUserDataByToken(token, userDispatch).then((data) => {
-         if (data.username) {
-            const username = data.username;
-            setUserData(username, userDispatch);
-            setMainPost(username, mainPostDispatch);
-            setWishlist(username, wishlistDispatch);
-            setMyComponents(username, componentDispatch);
-         }
-      });
+      if (token) {
+         getUserDataByToken(token, userDispatch).then((data) => {
+            if (data.username) {
+               const username = data.username;
+               setUserData(username, userDispatch);
+               setMainPost(username, mainPostDispatch);
+               setWishlist(username, wishlistDispatch);
+               setMyComponents(username, componentDispatch);
+            }
+         });
+      } else {
+         userDispatch({ type: 'UNSET_STATE' });
+      }
    }, []);
 
    return (

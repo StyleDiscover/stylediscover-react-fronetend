@@ -354,6 +354,7 @@ export const setUserData = async (username, userDispatch) => {
          userDispatch({ type: 'SET_LOGIN_METHOD', data: 'email' });
          userDispatch({ type: 'SET_USER_DATA', data: res.data });
          axios.defaults.headers.common['Authorization'] = token;
+         console.log(res.status);
       })
       .catch((e) => {});
    userDispatch({ type: 'NOT_LOADING' });
@@ -446,6 +447,10 @@ export const getUserDataByToken = async (token, userDispatch) => {
          return res.data;
       })
       .catch((e) => {
+         userDispatch({ type: 'UNSET_STATE' });
+         if (localStorage.AccessToken) {
+            _unsetAuthToken();
+         }
          return e.response.data;
       });
    userDispatch({ type: 'NOT_LOADING' });

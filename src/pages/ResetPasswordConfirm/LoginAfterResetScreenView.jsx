@@ -1,14 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 
 //MUI Imports
-import {
-   Typography,
-   Button,
-   Container,
-   Paper,
-   Link as MUILink,
-} from '@material-ui/core';
+import { Typography, Button, Container, Paper } from '@material-ui/core';
 import { Check } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -28,7 +22,7 @@ const useStyles = makeStyles({
    },
 });
 
-function ResetEmailSentScreen() {
+function LoginAfterResetScreenView() {
    //use styles
    const classes = useStyles();
 
@@ -41,21 +35,33 @@ function ResetEmailSentScreen() {
                className={classes.customVerifiedText}
                display="inline"
             >
-               Reset Link Sent!
+               Password Reset Successfully!
             </Typography>
             <br />
             <div
                style={{
                   marginTop: 10,
+                  marginBottom: 10,
                }}
             >
                <Typography variant="body1" align="justify">
-                  Please check your email for reset link.
+                  Please login again.
                </Typography>
             </div>
+            {/* <Typography variant="body1">Login now!</Typography> */}
+            <Button
+               className={classes.customHeroButton}
+               variant="contained"
+               component={Link}
+               color="primary"
+               to="/login"
+               disableElevation
+            >
+               Login
+            </Button>
          </div>
       </Paper>
    );
 }
 
-export default ResetEmailSentScreen;
+export default LoginAfterResetScreenView;

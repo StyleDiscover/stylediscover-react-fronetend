@@ -16,3 +16,5 @@ export { MainPostCaptionView as MainPostCaption } from './General/MainPostCaptio
 export { GoBackButtonView as GoBackButton } from './General/GoBackButtonView';
 export { DarkTooltip } from './General/DarkTooltipView';
 export { ProfileDetailView } from './General/ProfileDetailView';
+export { ChangeUsernameContainer as ChangeUsername } from './ChangeUsername/ChangeUsernameContainer';
+export { PostPageMainPostContainer as PostPageMainPost } from './PostPageMainPost/PostPageMainPostContainer';

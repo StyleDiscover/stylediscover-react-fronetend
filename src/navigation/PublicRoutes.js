@@ -33,12 +33,6 @@ import UnAuthRoute from 'utils/UnAuthRoute';
 import AdminRoute from 'utils/AdminRoute';
 
 //page imports
-import Register from 'pages/Register';
-import Wishlist from 'pages/Wishlist';
-import ChangeUsername from 'pages/ChangeUsername';
-import ResetPassword from 'pages/ResetPassword';
-import ResetPasswordConfirm from 'pages/ResetPasswordConfirm';
-import PostPage from 'pages/PostPage';
 import {
    Home,
    AboutUs,
@@ -54,6 +48,11 @@ import {
    Login,
    LoginAsUser,
    MyCollection,
+   PostPage,
+   Register,
+   ResetPassword,
+   ResetPasswordConfirm,
+   Wishlist,
 } from 'pages';
 
 export default function PublicRoutes() {
@@ -78,7 +77,6 @@ export default function PublicRoutes() {
          <UnAuthRoute exact path={WISHLIST} component={Wishlist} />
          <UnAuthRoute exact path={ANALYTICS} component={Analytics} />
          <UnAuthRoute exact path={MY_COLLECTION} component={MyCollection} />
-         <UnAuthRoute exact path={CHANGE_USERNAME} component={ChangeUsername} />
 
          {/* ROUTES WITH PARAMETERS */}
          <Route

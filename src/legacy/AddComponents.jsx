@@ -33,7 +33,7 @@ import {
 
 //MUI Icons Import
 import { Add, Close } from '@material-ui/icons';
-import NonEditableComponentPost from '../components/ComponentPost/NonEditableComponentPost';
+import NonEditableComponentPost from './ComponentPost/NonEditableComponentPost';
 import CropperSD from './Cropper';
 
 //use styles

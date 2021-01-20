@@ -34,7 +34,7 @@ import discoverherstyleImg from '../assets/slider/5.jpeg';
 
 //components
 import WishlistComponent from '../components/Wishlist/WishlistComponent';
-import NonEditableComponentPost from '../components/ComponentPost/NonEditableComponentPost';
+import NonEditableComponentPost from './ComponentPost/NonEditableComponentPost';
 import ImageSlider from '../components/Static/ImageSlider';
 
 //MUI Make Styles

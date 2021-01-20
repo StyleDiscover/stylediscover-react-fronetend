@@ -18,7 +18,7 @@ import {
    Link as MUILink,
    makeStyles,
 } from '@material-ui/core';
-import NonEditableMainPost from '../components/MainPost/NonEditableMainPost';
+import NonEditableMainPost from './MainPost/NonEditableMainPost';
 
 //MUI Icons
 import { Launch } from '@material-ui/icons';

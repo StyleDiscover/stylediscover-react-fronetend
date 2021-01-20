@@ -3,10 +3,13 @@ import React from 'react';
 //component imports
 import { MainPostMediaImage, MainPostMediaVideo } from 'components';
 
+//MUI imports
+import { Grid } from '@material-ui/core';
+
 export default function NonEditableMainPostMediaView({
    history,
-   mainPostData,
    encryptedId,
+   mainPostData,
 }) {
    return (
       <div>

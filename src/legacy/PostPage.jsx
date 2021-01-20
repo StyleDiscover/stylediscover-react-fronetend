@@ -1,9 +1,9 @@
 //react imports
-import React, { useState, useEffect, useContext } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 
 //import post
-import PostPageMainPost from '../components/MainPost/PostPageMainPost';
+import PostPageMainPost from './MainPost/PostPageMainPost';
 
 //crypto imports
 import AES from 'crypto-js/aes';

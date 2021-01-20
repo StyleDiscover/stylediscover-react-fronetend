@@ -24,7 +24,7 @@ import { Add } from '@material-ui/icons';
 
 //components
 import WishlistComponent from '../components/Wishlist/WishlistComponent';
-import NonEditableComponentPost from '../components/ComponentPost/NonEditableComponentPost';
+import NonEditableComponentPost from './ComponentPost/NonEditableComponentPost';
 
 //MUI Make Styles
 const useStyles = makeStyles({

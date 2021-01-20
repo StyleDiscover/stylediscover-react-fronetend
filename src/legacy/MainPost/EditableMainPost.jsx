@@ -7,7 +7,7 @@ import AES from 'crypto-js/aes';
 
 //import component
 import EditableComponentPost from '../ComponentPost/EditableComponentPost';
-import AddComponents from '../../legacy/AddComponents';
+import AddComponents from '../AddComponents';
 
 //time ago
 import TimeAgo from 'react-timeago';
@@ -44,7 +44,7 @@ import {
 
 //MUI Icons imports
 import { Delete, Edit, MoreVert } from '@material-ui/icons';
-import CropperSD from '../../legacy/Cropper';
+import CropperSD from '../Cropper';
 
 //MUI make style
 const useStyles = makeStyles({

@@ -12,7 +12,7 @@ import {
 } from '@material-ui/core';
 
 //components import
-import { ChangeUsername } from 'pages';
+import { ChangeUsername } from 'components';
 
 const useStyles = makeStyles({
    customDivider: {

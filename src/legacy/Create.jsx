@@ -44,7 +44,7 @@ import {
 
 //MUI Icons Import
 import { Add, Close, ContactSupportOutlined } from '@material-ui/icons';
-import NonEditableComponentPost from '../components/ComponentPost/NonEditableComponentPost';
+import NonEditableComponentPost from './ComponentPost/NonEditableComponentPost';
 
 //use styles
 const useStyle = makeStyles({

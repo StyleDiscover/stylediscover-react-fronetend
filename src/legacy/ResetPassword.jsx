@@ -2,7 +2,7 @@
 import React, { useContext, useState } from 'react';
 
 //component imports
-import ResetEmailSentScreen from '../components/ResetPassword/ResetEmailSentScreen';
+import ResetEmailSentScreenView from '../pages/ResetPassword/ResetEmailSentScreenView';
 
 //MUI Imports
 import {
@@ -144,7 +144,7 @@ export default function ResetPassword(props) {
                </form>
             </Paper>
          )}
-         {emailSent && <ResetEmailSentScreen />}
+         {emailSent && <ResetEmailSentScreenView />}
       </Container>
    );
 }
