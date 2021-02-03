@@ -25,7 +25,7 @@ export default function EditCaptionDialog({
    handleEditCaptionClose,
    handleEditCaptionChange,
    handleEditCaptionSubmit,
-   mainPosts,
+   status,
    caption,
 }) {
    //use styles
@@ -69,7 +69,7 @@ export default function EditCaptionDialog({
                <Button
                   onClick={handleEditCaptionClose}
                   color="inherit"
-                  disabled={mainPosts.loading}
+                  disabled={status === 'loading'}
                >
                   Cancel
                </Button>
@@ -77,10 +77,10 @@ export default function EditCaptionDialog({
                   onClick={handleEditCaptionSubmit}
                   color="primary"
                   variant="contained"
-                  disabled={mainPosts.loading}
+                  disabled={status === 'loading'}
                >
                   Edit Caption
-                  {mainPosts.loading && (
+                  {status === 'loading' && (
                      <CircularProgress
                         size={20}
                         className={classes.customProgress}

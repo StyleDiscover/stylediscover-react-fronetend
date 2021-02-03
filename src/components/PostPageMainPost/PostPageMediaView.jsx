@@ -32,10 +32,12 @@ export default function PostPageMediaView({ mainPostData }) {
          {mainPostData.media_type === 'VD' && (
             <CardMedia>
                <video
-                  // controls
-                  autoPlay
-                  loop
-                  muted
+                  controls
+                  controlsList="nodownload"
+                  autoPlay={true}
+                  loop={true}
+                  muted={true}
+                  playsInline={true}
                   style={{
                      width: '100%',
                   }}

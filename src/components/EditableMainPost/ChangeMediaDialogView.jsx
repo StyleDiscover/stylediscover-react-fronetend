@@ -43,7 +43,7 @@ export default function ChangeMediaDialogView({
    handleChangeDialogClose,
    mediaPreview,
    mainPostData,
-   mainPosts,
+   status,
    handleUploadChangeMedia,
    handleChangeMedia,
 }) {
@@ -83,9 +83,10 @@ export default function ChangeMediaDialogView({
                   <CardMedia
                      image={mediaPreview}
                      component="video"
-                     autoPlay
-                     loop
-                     muted
+                     autoPlay={true}
+                     loop={true}
+                     muted={true}
+                     playsInline={true}
                   ></CardMedia>
                )}
                {mainPostData && mainPostData.media_type === 'IM' && (
@@ -128,7 +129,7 @@ export default function ChangeMediaDialogView({
                <Button
                   onClick={handleChangeDialogClose}
                   color="inherit"
-                  disabled={mainPosts.loading}
+                  disabled={status === 'loading'}
                >
                   Cancel
                </Button>
@@ -136,12 +137,12 @@ export default function ChangeMediaDialogView({
                   onClick={handleChangeMedia}
                   color="primary"
                   variant="contained"
-                  disabled={mainPosts.loading || !Boolean(mediaUrl)}
+                  disabled={status === 'loading' || !Boolean(mediaUrl)}
                >
                   Change{' '}
                   {mainPostData &&
                      (mainPostData.media_type === 'VD' ? 'Video' : 'Image')}
-                  {mainPosts.loading && (
+                  {status === 'loading' && (
                      <CircularProgress
                         size={20}
                         className={classes.customProgress}

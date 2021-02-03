@@ -17,3 +17,6 @@ export { RegisterContainer as Register } from './Register/RegisterContainer';
 export { ResetPasswordContainer as ResetPassword } from './ResetPassword/ResetPasswordContainer';
 export { ResetPasswordConfirmContainer as ResetPasswordConfirm } from './ResetPasswordConfirm/ResetPasswordConfirmContainer';
 export { WishlistContainer as Wishlist } from './Wishlist/WishlistContainer';
+export { CreateBlogContainer as CreateBlog } from './CreateBlog/CreateBlogContainer';
+export { BlogsContainer as Blogs } from './Blogs/BlogsContainer';
+export { BlogsPageContainer as BlogsPage } from './BlogsPage/BlogsPageContainer';

@@ -1,20 +1,15 @@
 //react imports
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
 //context and events imports
-import { MainPostContext } from 'context/MainPostContext';
 import { UserContext } from 'context/UserContext';
-import { MyComponentsContext } from 'context/MyComponentContext';
-import {
-   addComponent,
-   publishMainPost,
-   getSiteRecord,
-   getSiteMedia,
-} from 'events/MainPostEvents';
 
 //MUI Imports
 import { Container, Card, Divider } from '@material-ui/core';
+
+//hooks
+import { usePublish } from 'hooks';
 
 //import components
 import { AddComponents } from 'components';
@@ -30,8 +25,6 @@ import CaptionFieldView from './CaptionFieldView';
 
 export function CreateContainer() {
    //use context
-   const { mainPosts, mainPostDispatch } = useContext(MainPostContext);
-   const { myComponentData } = useContext(MyComponentsContext);
    const { user } = useContext(UserContext);
 
    //use history
@@ -46,14 +39,12 @@ export function CreateContainer() {
 
    //add component dialog states
    const [addDialogOpen, setAddDialogOpen] = useState(false);
-   const [cropDialogOpen, setCropDialogOpen] = useState(false);
-
-   //snackbar
-   const [openPublishSnackbar, setOpenPublishSnackbar] = useState(false);
 
    //flags
-   let canPublish = Boolean(media && componentList.length > 0);
-   let componentsSeleted = Boolean(myComponentData.addComponents.length > 0);
+   let canPublish = Boolean(media);
+
+   //hooks
+   const { mutate: publish, status: publishStatus } = usePublish();
 
    const addMainPicture = (event) => {
       if (event.target.files && event.target.files[0]) {
@@ -86,10 +77,6 @@ export function CreateContainer() {
       setAddDialogOpen(true);
    };
 
-   const handleCropDialogOpen = () => {
-      setCropDialogOpen(true);
-   };
-
    //for captions
    const handleCaptionChange = (event) => {
       if (event.target.name === 'caption') {
@@ -104,20 +91,11 @@ export function CreateContainer() {
       mainPostData.append('media_type', mediaType);
       mainPostData.append('caption', caption);
 
-      await publishMainPost(
+      publish({
          mainPostData,
-         componentList.slice(0, 8),
-         mainPostDispatch,
-         history
-      );
-   };
-
-   const handleCloseCopySnackbar = (event, reason) => {
-      if (reason === 'clickaway') {
-         return;
-      }
-
-      setOpenPublishSnackbar(false);
+         componentPostData: componentList.slice(0, 8),
+         history,
+      });
    };
 
    return (
@@ -156,7 +134,7 @@ export function CreateContainer() {
          <PublishButtonView
             handlePublish={handlePublish}
             canPublish={canPublish}
-            mainPosts={mainPosts}
+            status={publishStatus}
          />
 
          <AddComponents

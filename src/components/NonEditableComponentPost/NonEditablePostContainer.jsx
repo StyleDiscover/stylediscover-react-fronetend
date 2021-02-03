@@ -1,5 +1,5 @@
 //react imports
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useContext } from 'react';
 
 //for history
 import { useHistory } from 'react-router-dom';
@@ -7,17 +7,20 @@ import { useHistory } from 'react-router-dom';
 //crypto imports
 import AES from 'crypto-js/aes';
 
+//hooks
+import { useGetComponentId } from 'hooks';
+
 //context and events
 import { WishlistContext } from 'context/WishlistContext';
 import { UserContext } from 'context/UserContext';
 import { addWishlist, removeWishlist } from 'events/WishlistEvents';
 import { sendEventAnalytics } from 'events/AnalyticsEvents';
-import { getComponentById } from 'events/MainPostEvents';
 import MediaView from './MediaView';
 import ComponentDialogView from './ComponentDialogView';
 
 //Navigation constants
 import { LOGIN } from 'navigation/Constants';
+import { POST_ENCRYPTION_KEY, WISHLIST_ENCRYPTION_KEY } from 'config/Constants';
 
 export function NonEditablePostContainer({
    componentId,
@@ -29,23 +32,27 @@ export function NonEditablePostContainer({
    const history = useHistory();
 
    //states
-   const [componentPostData, setComponentPostData] = useState(); //component post data
    const [open, setOpen] = useState(false); //buy dialog open flag
-   const [loadingComponent, setLoadingComponent] = useState(false); //loading component flag
 
    //use context
    const { wishlists, wishlistDispatch } = useContext(WishlistContext);
    const { user } = useContext(UserContext);
 
+   //react-query queries
+   const {
+      data: componentPostData,
+      status: componentPostStatus,
+   } = useGetComponentId(componentId);
+
    //encrtypted ID
    const encryptedWishlistId = AES.encrypt(
       `${componentId}`,
-      '2yPNdoy1yRQz5gDkg5mx'
+      WISHLIST_ENCRYPTION_KEY
    )
       .toString()
       .replace(/\//g, '*');
 
-   const encryptedPostId = AES.encrypt(`${mainPostId}`, 'Pjmaq7EV2C7lQeaUuLVD')
+   const encryptedPostId = AES.encrypt(`${mainPostId}`, POST_ENCRYPTION_KEY)
       .toString()
       .replace(/\//g, '*');
 
@@ -55,10 +62,6 @@ export function NonEditablePostContainer({
    )
       .toString()
       .replace(/\//g, '*');
-
-   useEffect(() => {
-      getComponentById(componentId).then((data) => setComponentPostData(data));
-   }, []);
 
    //GUnctions
    //dialog functions
@@ -116,7 +119,7 @@ export function NonEditablePostContainer({
 
    return (
       <div>
-         {componentPostData && (
+         {componentPostStatus === 'success' && (
             <MediaView
                handleClickOpen={handleClickOpen}
                handleWishlist={handleWishlist}
@@ -125,7 +128,7 @@ export function NonEditablePostContainer({
                componentId={componentId}
             />
          )}
-         {componentPostData && (
+         {componentPostStatus === 'success' && (
             <ComponentDialogView
                handleClose={handleClose}
                handleWishlist={handleWishlist}

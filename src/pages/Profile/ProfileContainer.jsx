@@ -9,14 +9,16 @@ import { ANALYTICS } from 'navigation/Constants';
 
 //import context
 import { UserContext } from 'context/UserContext';
-import { MainPostContext } from 'context/MainPostContext';
 
 //import services
 import { updateUserInfo, setUserData } from 'events/UserEvents';
 import { sendEmailToAdmin } from 'events/MainPostEvents';
 
 //MUI imports
-import { Container, LinearProgress, Typography, Grid } from '@material-ui/core';
+import { Container, LinearProgress, Typography } from '@material-ui/core';
+
+//hooks
+import { useGetUser, useGetPosts } from 'hooks';
 
 //view imports
 import CopyRedirectView from './CopyRedirectView';
@@ -25,23 +27,37 @@ import NoPostNoEmailView from './NoPostNoEmailView';
 import NoPostEmailView from './NoPostEmailView';
 import ButtonGroupView from './ButtonGroupView';
 import EditProfileDialogView from './EditProfileDialogView';
+import ProfilePosts from './ProfilePosts';
+import CreateButtonView from './CreateButtonView';
+// import TabsView from './TabsView';
 
 //components, ,
-const { EditableMainPost } = loadable(() => import('components'));
-const { CreateButton } = loadable(() => import('components'));
 const { ProfileDetailView } = loadable(() => import('components'));
 
 export function ProfileContainer() {
    //use context
    const { user, userDispatch } = useContext(UserContext);
-   const { mainPosts } = useContext(MainPostContext);
+   // const { mainPosts } = useContext(MainPostContext);
+   const { data: userData, status: userStatus } = useGetUser(
+      user.userData.username
+   );
+
+   const enabled = userData?.username === user.userData.username;
+   const userId = userData?.id;
+   const {
+      data: postData,
+      error: postError,
+      fetchNextPage: fetchNextPost,
+      hasNextPage: hasNextPost,
+      isFetchingNextPage: fetchingMorePost,
+      status: postStatus,
+   } = useGetPosts(user.userData.username, enabled, userId);
 
    //history
    const history = useHistory();
 
    //STATES
    // for email
-   const [loadingEmail, setLoadingEmail] = useState(false);
 
    //for edit profile dialog
    const [editProfileOpen, setEditProfileOpen] = useState(false);
@@ -71,7 +87,6 @@ export function ProfileContainer() {
 
    //email functions
    const handleSentInstaEmail = async () => {
-      setLoadingEmail(true);
       const subject = `Import Instagram - ${user.userData.username}`;
       const message = `Import last five instagram posts of ${user.userData.username}.`;
 
@@ -84,10 +99,8 @@ export function ProfileContainer() {
       if (emailStatus === 200) {
          await setUserData(user.userData.username, userDispatch);
          window.alert('We have recieved your message!');
-         setLoadingEmail(false);
       } else {
          window.alert('Error sending message, try again later.');
-         setLoadingEmail(false);
       }
    };
 
@@ -128,35 +141,58 @@ export function ProfileContainer() {
          {/* BUTTON GROUP ENDS*/}
 
          {/* CREATE BUTTON STARTS */}
-         <CreateButton />
+         <CreateButtonView />
          {/* CREATE BUTTON ENDS */}
 
+         {/* TABS STARTS */}
+         {/* <TabsView
+            data={[
+               {
+                  name: 'tab1',
+                  content: <div></div>,
+               },
+               {
+                  name: 'tab',
+                  content: 'tab',
+               },
+            ]}
+         /> */}
+         {/* TABS ENDS */}
+
          {/* NO POST STARTS */}
-         {mainPosts.mainPosts.length === 0 &&
+         {postData?.pages[0]?.results.length === 0 &&
             user.userData.account_type === 'PR' && <NoPostPRView />}
-         {mainPosts.mainPosts.length === 0 &&
+         {postData?.pages[0]?.results.length === 0 &&
             !user.userData.sent_insta_email &&
             user.userData.account_type !== 'PR' && (
                <NoPostNoEmailView
-                  loadingEmail={loadingEmail}
+                  accountType={user.userData.account_type}
                   handleSentInstaEmail={handleSentInstaEmail}
                />
             )}
-         {mainPosts.mainPosts.length === 0 &&
+         {postData?.pages[0]?.results.length === 0 &&
             user.userData.sent_insta_email &&
             user.userData.account_type !== 'PR' && <NoPostEmailView />}
          {/* NO POST ENDS */}
 
          {/* POST STARTS */}
-         <Grid container={true} spacing={2}>
-            {mainPosts.mainPosts.map((id) => {
-               return (
-                  <Grid item={true} xs={12} sm={6} lg={4} key={id}>
-                     <EditableMainPost id={id} />
-                  </Grid>
-               );
-            })}
-         </Grid>
+         {postStatus === 'loading' ? (
+            <LinearProgress />
+         ) : postStatus === 'error' ? (
+            <div>Error Occured: {postError}</div>
+         ) : postStatus === 'success' ? (
+            <ProfilePosts
+               fetchNextPost={fetchNextPost}
+               hasNextPost={hasNextPost}
+               fetchingMorePost={fetchingMorePost}
+               postData={postData}
+            />
+         ) : (
+            postStatus === 'idle' &&
+            userStatus !== 'error' &&
+            userStatus !== 'loading' && <Typography>No Post</Typography>
+         )}
+
          {/* POST ENDS */}
 
          {/* EDIT PROFILE DIALOG STARTS */}

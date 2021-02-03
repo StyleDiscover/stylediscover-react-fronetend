@@ -87,7 +87,7 @@ const useStyle = makeStyles({
 export default function DeleteComponentView({
    deleteDialogOpen,
    handleDeleteDialogClose,
-   mainPosts,
+   status,
    handleDeletePost,
 }) {
    const classes = useStyle();
@@ -115,17 +115,17 @@ export default function DeleteComponentView({
             <Button
                onClick={handleDeleteDialogClose}
                color="inherit"
-               disabled={mainPosts.loading}
+               disabled={status === 'loading'}
             >
                Cancel
             </Button>
             <Button
                onClick={handleDeletePost}
                style={{ color: 'red' }}
-               disabled={mainPosts.loading}
+               disabled={status === 'loading'}
             >
                Delete
-               {mainPosts.loading && (
+               {status === 'loading' && (
                   <CircularProgress
                      size={20}
                      className={classes.customProgress}

@@ -23,7 +23,7 @@ export default function MyCollectionNoComponentView() {
    return (
       <div>
          <Typography className={classes.customNoPostMessage} variant="body2">
-            No Product In Collection.
+            You do not have any products in your collection.
          </Typography>
          <br />
          <Typography

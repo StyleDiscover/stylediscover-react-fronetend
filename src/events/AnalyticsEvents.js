@@ -14,12 +14,12 @@ ReactPixel.init('417164693036908');
 ReactGA.initialize('UA-176723741-1');
 
 //Axios Settings
-axios.defaults.baseURL =
-   window.location.port === '3000'
-      ? 'http://localhost:8000/'
-      : `${window.location.protocol}//${
-           window.location.hostname + ':' + window.location.port
-        }/`;
+// axios.defaults.baseURL =
+//    window.location.port === '3000'
+//       ? 'http://localhost:8000/'
+//       : `${window.location.protocol}//${
+//            window.location.hostname + ':' + window.location.port
+//         }/`;
 
 export const sendPageViewAnalytics = async (userId, postId) => {
    axios.get(`/sda/e/view?uid=${userId}&pid=${postId}`);

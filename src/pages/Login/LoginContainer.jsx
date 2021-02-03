@@ -17,6 +17,7 @@ import LoginFormView from './LoginFormView';
 //compoennts import
 import { FacebookLogin } from 'components';
 import LoginBottomView from './LoginBottomView';
+import { POST_ENCRYPTION_KEY, WISHLIST_ENCRYPTION_KEY } from 'config/Constants';
 
 export function LoginContainer({ history }) {
    //states
@@ -43,7 +44,7 @@ export function LoginContainer({ history }) {
             .replace(/\*/g, '/');
          const wishlistId = AES.decrypt(
             wishlistIdEncrypted,
-            '2yPNdoy1yRQz5gDkg5mx'
+            WISHLIST_ENCRYPTION_KEY
          ).toString(enc);
          setWishlistId(wishlistId);
       }
@@ -55,7 +56,7 @@ export function LoginContainer({ history }) {
             .replace(/\*/g, '/');
          const postId = AES.decrypt(
             postIdEncrypted,
-            'Pjmaq7EV2C7lQeaUuLVD'
+            POST_ENCRYPTION_KEY
          ).toString(enc);
          setPostId(postId);
       }

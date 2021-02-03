@@ -20,11 +20,13 @@ export function MainPostMediaVideo({ history, mainPostData, encryptedId }) {
    const classes = useStyles();
    return (
       <CardMedia>
-         <video
-            // controls
-            autoPlay
-            loop
-            muted
+         <CardMedia
+            image={mainPostData.media_url}
+            component="video"
+            autoPlay={true}
+            loop={true}
+            muted={true}
+            playsInline={true}
             style={{
                width: '100%',
                cursor: 'pointer',
@@ -32,13 +34,22 @@ export function MainPostMediaVideo({ history, mainPostData, encryptedId }) {
             onClick={() => {
                history.push(`/post/${encryptedId}`);
             }}
+         ></CardMedia>
+         {/* <video
+            // controls
+            autoPlay={true}
+            loop={true}
+            muted={true}
+            playsInline={true}
+            controlsList="nodownload"
+            
          >
             <source
-               src={mainPostData.media_url}
+               src={}
                title="Video"
                type="video/mp4"
             ></source>
-         </video>
+         </video> */}
       </CardMedia>
    );
 }

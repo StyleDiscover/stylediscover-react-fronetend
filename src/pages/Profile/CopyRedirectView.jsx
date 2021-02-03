@@ -19,8 +19,11 @@ import { makeStyles, withStyles } from '@material-ui/core/styles';
 //MUI Icons Import
 import { FilterNoneRounded as FilterNone, OpenInNew } from '@material-ui/icons';
 
+//components
+import { CustomSnackBar } from 'components';
+
 //Contexts
-import { UserContext } from '../../context/UserContext';
+import { UserContext } from 'context/UserContext';
 
 //MUI Make Styles
 const useStyles = makeStyles({
@@ -116,30 +119,11 @@ function CopyRedirectView({ username }) {
             </Paper>
          </Container>
 
-         <Snackbar
-            anchorOrigin={{
-               vertical: 'bottom',
-               horizontal: 'center',
-            }}
-            open={openCopySnackbar}
-            autoHideDuration={6000}
-            onClose={handleCloseCopySnackbar}
-         >
-            <SnackbarContent
-               className={classes.customCopySnackbar}
-               action={
-                  <IconButton
-                     size="small"
-                     aria-label="close"
-                     onClick={handleCloseCopySnackbar}
-                     color="inherit"
-                  >
-                     <Close fontSize="small" />
-                  </IconButton>
-               }
-               message="Link Copied!"
-            />
-         </Snackbar>
+         <CustomSnackBar
+            openSnackbar={openCopySnackbar}
+            handleClose={handleCloseCopySnackbar}
+            message="Link Copied!"
+         />
       </div>
    );
 }

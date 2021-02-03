@@ -1,13 +1,5 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
-
-//import context and event
-import { MainPostContext } from 'context/MainPostContext';
-import {
-   getMainPostById,
-   editMainPost,
-   deleteMainPost,
-} from 'events/MainPostEvents';
 
 //MUI imports
 import { Card } from '@material-ui/core';
@@ -17,6 +9,9 @@ import EditMenuView from './EditMenuView';
 import ChangeMediaDialogView from './ChangeMediaDialogView';
 import DeleteMediaDialogView from './DeleteMediaDialogView';
 
+//hooks
+import { useGetPostId, useEditPost, useDeletePost } from 'hooks';
+
 //crypto imports
 import AES from 'crypto-js/aes';
 
@@ -24,13 +19,10 @@ import AES from 'crypto-js/aes';
 import { AddComponents, MainPostCaption } from 'components';
 import MediaView from './MediaView';
 import EditCaptionDialog from './EditCaptionDialog';
+import { POST_ENCRYPTION_KEY } from 'config/Constants';
 
 export function EditableMainPostContainer({ id }) {
-   //use context
-   const { mainPosts, mainPostDispatch } = useContext(MainPostContext);
-
    //use state
-   const [mainPostData, setMainPostData] = useState(null);
    const [editMenu, setEditMenu] = useState(false);
    const [mediaPreview, setMediaPreview] = useState();
 
@@ -52,17 +44,14 @@ export function EditableMainPostContainer({ id }) {
    const history = useHistory();
 
    //encrypted ID
-   const encryptedId = AES.encrypt(`${id}`, 'Pjmaq7EV2C7lQeaUuLVD')
+   const encryptedId = AES.encrypt(`${id}`, POST_ENCRYPTION_KEY)
       .toString()
       .replace(/\//g, '*');
 
-   //use effect
-   useEffect(() => {
-      getMainPostById(id, mainPostDispatch).then((data) => {
-         setMainPostData(data);
-         setCaption(data.caption);
-      });
-   }, []);
+   //react-query
+   const { data: mainPostData, status: mainPostStatus } = useGetPostId(id);
+   const { mutate: editPost, status: editStatus } = useEditPost();
+   const { mutate: deletePost, status: deleteStatus } = useDeletePost();
 
    //functions
    //edit menu
@@ -77,7 +66,6 @@ export function EditableMainPostContainer({ id }) {
    //change media functions
    const handleChangeDialogClose = () => {
       setChangeDialogOpen(false);
-      mainPostDispatch({ type: 'UNSET_ERROR_DATA' });
       setMediaPreview();
    };
 
@@ -102,15 +90,8 @@ export function EditableMainPostContainer({ id }) {
          newMainPostData.append('component_posts', component);
       });
 
-      await editMainPost(
-         newMainPostData,
-         mainPostData.id,
-         mainPostDispatch
-      ).then(async () => {
-         await getMainPostById(id, mainPostDispatch).then((data) =>
-            setMainPostData(data)
-         );
-      });
+      editPost({ data: newMainPostData, id });
+
       handleChangeDialogClose();
       closeEditMenu();
    };
@@ -126,7 +107,7 @@ export function EditableMainPostContainer({ id }) {
 
    const handleDeletePost = async (event) => {
       event.preventDefault();
-      await deleteMainPost(mainPostData.id, mainPostDispatch);
+      deletePost({ username: mainPostData.username, id });
       handleDeleteDialogClose();
    };
 
@@ -145,20 +126,11 @@ export function EditableMainPostContainer({ id }) {
          newMainPostData.append('component_posts', component);
       });
 
-      await editMainPost(
-         newMainPostData,
-         mainPostData.id,
-         mainPostDispatch
-      ).then(async () => {
-         await getMainPostById(id, mainPostDispatch).then((data) =>
-            setMainPostData(data)
-         );
-      });
+      editPost({ data: newMainPostData, id });
+
       handleChangeDialogClose();
       closeEditMenu();
    };
-
-   const refreshData = (data) => setMainPostData(data);
 
    //for editing caption
    const handleEditCaptionClose = () => {
@@ -177,15 +149,8 @@ export function EditableMainPostContainer({ id }) {
          newMainPostData.append('component_posts', component);
       });
 
-      await editMainPost(
-         newMainPostData,
-         mainPostData.id,
-         mainPostDispatch
-      ).then(async () => {
-         await getMainPostById(id, mainPostDispatch).then((data) =>
-            setMainPostData(data)
-         );
-      });
+      editPost({ data: newMainPostData, id });
+
       handleEditCaptionClose();
       closeEditMenu();
    };
@@ -197,7 +162,7 @@ export function EditableMainPostContainer({ id }) {
    };
 
    return (
-      mainPostData && (
+      mainPostStatus === 'success' && (
          <div>
             <Card>
                <HeaderView
@@ -212,11 +177,7 @@ export function EditableMainPostContainer({ id }) {
                {mainPostData.caption !== '' && (
                   <MainPostCaption caption={mainPostData.caption} />
                )}
-               <ContentView
-                  mainPostData={mainPostData}
-                  id={id}
-                  refreshData={refreshData}
-               />
+               <ContentView mainPostData={mainPostData} id={id} />
             </Card>
 
             {/* NON CARD VIEWS STARTS */}
@@ -235,22 +196,24 @@ export function EditableMainPostContainer({ id }) {
                handleChangeDialogClose={handleChangeDialogClose}
                mediaPreview={mediaPreview}
                mainPostData={mainPostData}
-               mainPosts={mainPosts}
+               status={editStatus}
                handleUploadChangeMedia={handleUploadChangeMedia}
                handleChangeMedia={handleChangeMedia}
             />
             <DeleteMediaDialogView
                deleteDialogOpen={deleteDialogOpen}
                handleDeleteDialogClose={handleDeleteDialogClose}
-               mainPosts={mainPosts}
                handleDeletePost={handleDeletePost}
+               status={deleteStatus}
             />
             <AddComponents
                openDialog={addDialogOpen}
                media={mainPostData.media_url}
                mediaType={mainPostData.media_type}
                handleSubmit={(list) => {
-                  handleAddComponent(list);
+                  if (list.length > 0) {
+                     handleAddComponent(list);
+                  }
                }}
                closeDialog={(close) => setAddDialogOpen(close)}
             />
@@ -259,8 +222,8 @@ export function EditableMainPostContainer({ id }) {
                handleEditCaptionClose={handleEditCaptionClose}
                handleEditCaptionChange={handleEditCaptionChange}
                handleEditCaptionSubmit={handleEditCaptionSubmit}
-               mainPosts={mainPosts}
                caption={caption}
+               status={editStatus}
             />
             {/* NON CARD VIEWS ENDS */}
          </div>

@@ -8,40 +8,33 @@ import { Card } from '@material-ui/core';
 //crypto imports
 import AES from 'crypto-js/aes';
 
+//hooks
+import { useGetPostId } from 'hooks';
+
 //context and events imports
-import { MainPostContext } from 'context/MainPostContext';
-import { getMainPostById } from 'events/MainPostEvents';
 import NonEditableMainPostHeaderView from './NonEditableMainPostHeaderView';
 import NonEditableMainPostMediaView from './NonEditableMainPostMediaView';
 import NonEditableMainPostContentView from './NonEditableMainPostContentView';
 
 //components imports
 import { MainPostCaption } from 'components';
+import { POST_ENCRYPTION_KEY } from 'config/Constants';
 
 export function NonEditableMainPostContainer({ id }) {
-   //use context
-   const { mainPostDispatch } = useContext(MainPostContext);
-
-   //states
-   const [mainPostData, setMainPostData] = useState();
+   //react-query
+   const { data: mainPostData, status: mainPostStatus } = useGetPostId(id);
 
    //use history
    const history = useHistory();
 
-   const encryptedId = AES.encrypt(`${id}`, 'Pjmaq7EV2C7lQeaUuLVD')
+   const encryptedId = AES.encrypt(`${id}`, POST_ENCRYPTION_KEY)
       .toString()
       .replace(/\//g, '*');
 
    //use effect
-   useEffect(() => {
-      getMainPostById(id, mainPostDispatch).then((data) =>
-         setMainPostData(data)
-      );
-   }, []);
-
    return (
       <div>
-         {mainPostData && (
+         {mainPostStatus === 'success' && (
             <Card>
                <NonEditableMainPostHeaderView mainPostData={mainPostData} />
                <NonEditableMainPostMediaView

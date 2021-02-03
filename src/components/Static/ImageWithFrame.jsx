@@ -1,5 +1,8 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
+
+//nav imports
+import { SIGNUP } from 'navigation/Constants';
 
 //MUI Imports
 import {
@@ -66,6 +69,9 @@ export default function ImageWithFrame(props) {
    //use styles
    const classes = useStyles();
 
+   //history
+   const history = useHistory();
+
    //get content from props
    const {
       imageLeft,
@@ -88,17 +94,28 @@ export default function ImageWithFrame(props) {
             {content}
          </Typography>
          {cta && (
+            // <Button
+            //    className={classes.customHeroButtonWa}
+            //    variant="contained"
+            //    onClick={() => {
+            //       window.open('https://wa.me/17345459845', '_blank');
+            //    }}
+            //    color="secondary"
+            //    disableElevation
+            //    startIcon={<WhatsApp />}
+            // >
+            //    I Want to Learn More
+            // </Button>
             <Button
-               className={classes.customHeroButtonWa}
+               className={classes.customHeroButton}
                variant="contained"
                onClick={() => {
-                  window.open('https://wa.me/17345459845', '_blank');
+                  history.push(SIGNUP);
                }}
-               color="secondary"
+               color="primary"
                disableElevation
-               startIcon={<WhatsApp />}
             >
-               I Want to Learn More
+               Sign-up Now
             </Button>
          )}
       </div>

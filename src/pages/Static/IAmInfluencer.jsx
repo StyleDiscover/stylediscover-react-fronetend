@@ -4,20 +4,27 @@ import { Link } from 'react-router-dom';
 //brand page components
 import Hero from 'components/Static/HeroInfluencer';
 import ImageWithFrame from 'components/Static/ImageWithFrame';
+import ImageWithFrameStep from 'components/Static/ImageWithFrameStep';
 import ImageSlider from 'components/Static/ImageSlider';
 
 //assets
-import SectionOneImage from 'assets/InfluencerSectionOne.png';
-import SectionTwoImage from 'assets/InfluencerSectionTwo.png';
+import SectionOneImage from 'assets/InfluencerSectionOne.jpg';
+import SectionTwoImage from 'assets/InfluencerSectionTwo.jpg';
 import SectionOneBackground from 'assets/SectionBackground.png';
 import HeroBackground from 'assets/HeroBackground.png';
 import FormBackground from 'assets/FormBackground.png';
 import SectionOneBackgroundFlipped from 'assets/SectionBackgroundFlipped.png';
 
+//steps assets
+import Step1 from 'assets/steps/step1.jpg';
+import Step2 from 'assets/steps/step2.jpg';
+import Step3 from 'assets/steps/step3.jpg';
+import Step4 from 'assets/steps/step4.jpg';
+
 //slider image
-import Slider1 from 'assets/slider/1.png';
-import Slider2 from 'assets/slider/2.png';
-import Slider3 from 'assets/slider/3.png';
+import Slider1 from 'assets/slider/1.jpg';
+import Slider2 from 'assets/slider/2.jpg';
+import Slider3 from 'assets/slider/3.jpg';
 
 //slider image
 
@@ -133,6 +140,78 @@ export function IAmInfluencer() {
                </Grid>
             </ContentInMiddle>
          </div>
+
+         {/* <div>
+            <ImageWithFrameStep
+               imageLeft={true}
+               title={
+                  <Typography variant="h5" className={classes.monFont}>
+                     Sign-up <br /> & <br /> Login
+                  </Typography>
+               }
+               stepNumber="01"
+               imgUrl={Step1}
+               cta={false}
+               background={SectionOneBackground}
+               mainTitle={
+                  <Typography
+                     variant="h3"
+                     className={classes.monFont}
+                     align="center"
+                  >
+                     <b>HERE'S HOW IT WORKS</b>
+                  </Typography>
+               }
+               // ctaText="Signup"
+               // ctaUrl="/login"
+            />
+            <ImageWithFrameStep
+               imageLeft={false}
+               title={
+                  <Typography variant="h5" className={classes.monFont}>
+                     Upload <br /> content with <br /> shoppable <br />{' '}
+                     components
+                  </Typography>
+               }
+               stepNumber="02"
+               imgUrl={Step2}
+               cta={false}
+               background={SectionOneBackground}
+               // ctaText="Signup"
+               // ctaUrl="/login"
+            />
+            <ImageWithFrameStep
+               imageLeft={true}
+               title={
+                  <Typography variant="h5" className={classes.monFont}>
+                     Add <br /> StyleDiscover <br /> link in <br /> Instagram
+                     bio
+                  </Typography>
+               }
+               stepNumber="03"
+               imgUrl={Step3}
+               cta={false}
+               background={SectionOneBackground}
+               // ctaText="Signup"
+               // ctaUrl="/login"
+            />
+            <ImageWithFrameStep
+               imageLeft={false}
+               title={
+                  <Typography variant="h5" className={classes.monFont}>
+                     You're all set <br /> to inspire & <br /> help your <br />{' '}
+                     audience <br /> shop
+                  </Typography>
+               }
+               stepNumber="04"
+               imgUrl={Step4}
+               cta={false}
+               background={SectionOneBackground}
+               // ctaText="Signup"
+               // ctaUrl="/login"
+            />
+         </div> */}
+
          <div className={classes.containerMargin}>
             <ImageSlider
                data={[

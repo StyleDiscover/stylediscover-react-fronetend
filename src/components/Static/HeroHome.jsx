@@ -10,8 +10,7 @@ import LazyHero from 'react-lazy-hero';
 import VideoWithContent from './VideoWithContent';
 
 //video import
-import HeroVideo from '../../assets/hero.mp4';
-import HeroImage from '../../assets/hero.png';
+import HeroImage from '../../assets/hero.jpg';
 import HeroBackground from '../../assets/HeroBackground.png';
 import ImageWithContent from './ImageWithContent';
 

@@ -6,7 +6,7 @@ import { CardContent, Grid } from '@material-ui/core';
 //component imports
 import { EditableComponentPost } from 'components';
 
-export default function ContentView({ mainPostData, id, refreshData }) {
+export default function ContentView({ mainPostData, id }) {
    return (
       <CardContent>
          <Grid container={true} spacing={2}>
@@ -19,7 +19,6 @@ export default function ContentView({ mainPostData, id, refreshData }) {
                            mainPostId={id}
                            mainPostComponentList={mainPostData.component_posts}
                            userId={mainPostData.user_id}
-                           refreshMainPost={(data) => refreshData(data)}
                         />
                      </Grid>
                   );

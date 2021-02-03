@@ -1,60 +1,82 @@
 //react imports
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 
-//MUI Imports
-import { Container } from '@material-ui/core';
+//hooks
+import { useGetUser, useGetPosts } from 'hooks';
 
-//context and events
-import { MainPostContext } from 'context/MainPostContext';
+//event
 import { sendPageViewAnalytics } from 'events/AnalyticsEvents'; //analytics events
-import { getMainPost } from 'events/MainPostEvents';
+
+//MUI Imports
+import { Container, LinearProgress } from '@material-ui/core';
 
 //components
-import { ProfileDetailView, LoadingBar } from 'components';
+import { ProfileDetailView } from 'components';
 
 //views import
 import UserPageNotFoundView from './UserPageNotFoundView';
 import UserPagePostsView from './UserPagePostsView';
 import UserPageNoPostsView from './UserPageNoPostsView';
+import ClickImageToView from './ClickImageToView';
+import FixedFotterView from './FixedFotterView';
 
 export function UserPageContainer() {
-   //use context
-   const { mainPostDispatch } = useContext(MainPostContext);
-
-   //get the username
    let { username } = useParams();
 
-   //states
-   const [userData, setUserData] = useState();
-   const [loading, setLoading] = useState(false);
+   const { data: userData, status: userStatus } = useGetUser(username);
 
-   //useeffect
+   const enablePost = userData?.username === username;
+   const userId = userData?.id;
+
+   const {
+      data: postData,
+      error: postError,
+      fetchNextPage: fetchNextPost,
+      hasNextPage: hasNextPost,
+      isFetchingNextPage: fetchingMorePost,
+      status: postStatus,
+   } = useGetPosts(username, enablePost, userId);
+
    useEffect(() => {
-      setLoading(true);
-      getMainPost(username, mainPostDispatch).then((data) => {
-         setUserData(data);
-         setLoading(false);
-         if (data.id) {
-            sendPageViewAnalytics(data.id);
-         }
-      });
-   }, []);
+      if (userData?.id) {
+         sendPageViewAnalytics(userData?.id);
+      }
+   }, [userData?.id]);
 
    return (
-      <Container maxWidth="lg" className="margin-top-80">
-         {userData && userData.detail && <UserPageNotFoundView />}
-
-         {userData && userData.username && (
-            <div>
-               <ProfileDetailView userData={userData} displayName={false} />
-               <br />
-               <UserPagePostsView userData={userData} />
-               {userData.main_posts.length === 0 && <UserPageNoPostsView />}
-            </div>
-         )}
-
-         {loading && <LoadingBar />}
-      </Container>
+      <div>
+         <Container maxWidth="lg" className="margin-top-80">
+            {userStatus === 'success' && (
+               <ProfileDetailView userData={userData} />
+            )}
+            {userStatus === 'error' && <UserPageNotFoundView />}
+            {userStatus === 'loading' && <LinearProgress />}
+            {postStatus === 'loading' ? (
+               <LinearProgress />
+            ) : postStatus === 'error' ? (
+               <div>Error Occured: {postError}</div>
+            ) : postStatus === 'success' ? (
+               <div>
+                  <ClickImageToView />
+                  <UserPagePostsView
+                     postData={postData.pages}
+                     fetchingMorePost={fetchingMorePost}
+                     fetchNextPost={fetchNextPost}
+                     hasNextPost={hasNextPost}
+                  />
+               </div>
+            ) : (
+               postStatus === 'idle' &&
+               userStatus !== 'error' &&
+               userStatus !== 'loading' && <UserPageNoPostsView />
+            )}
+            {postStatus === 'success' &&
+               postData?.pages[0]?.results.length === 0 && (
+                  <UserPageNoPostsView />
+               )}
+         </Container>
+         <FixedFotterView />
+      </div>
    );
 }

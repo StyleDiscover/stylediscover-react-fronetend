@@ -7,9 +7,7 @@ import { Container, Button } from '@material-ui/core';
 //MUI icons
 import { Add } from '@material-ui/icons';
 
-import { CREATE } from 'navigation/Constants';
-
-export function CreateButton() {
+export function CreateButton({ text, destination, position, vposition }) {
    //history
    const history = useHistory();
 
@@ -18,7 +16,7 @@ export function CreateButton() {
          maxWidth="xs"
          style={{
             padding: '0px',
-            margin: '20px auto',
+            margin: 'auto',
             width: '100%',
          }}
       >
@@ -26,15 +24,20 @@ export function CreateButton() {
             variant="contained"
             color="primary"
             style={{
-               margin: 'auto',
+               margin:
+                  position === 'center'
+                     ? 'auto'
+                     : position === 'right'
+                     ? '0px 0px 0px auto'
+                     : '0px',
                display: 'flex',
                padding: '10px 15px',
                boxShadow: 'none',
             }}
             startIcon={<Add />}
-            onClick={() => history.push(CREATE)}
+            onClick={() => history.push(destination)}
          >
-            Create A Post
+            {text}
          </Button>
       </Container>
    );

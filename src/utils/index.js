@@ -1,0 +1,1 @@
+export { AXIOS_HEADER_FORMDATA, AXIOS_HEADER_JSON } from './Config';

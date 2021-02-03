@@ -2,8 +2,6 @@
 import React, { useState, useContext } from 'react';
 
 //context and events imports
-import { MainPostContext } from 'context/MainPostContext';
-import { UserContext } from 'context/UserContext';
 import { MyComponentsContext } from 'context/MyComponentContext';
 import MyComponentsView from './MyComponentsView';
 
@@ -12,8 +10,6 @@ export function MyComponentsContainer() {
    const [selectedComponent, setSelectedComponent] = useState([]);
 
    //use context
-   const { mainPostDispatch } = useContext(MainPostContext);
-   const { user } = useContext(UserContext);
    const { myComponentData, componentDispatch } = useContext(
       MyComponentsContext
    );

@@ -1,17 +1,12 @@
 // react imports
 import React from 'react';
-import { Link } from 'react-router-dom';
 
 //MUI imports
-import {
-   Container,
-   Paper,
-   CardMedia,
-   Typography,
-   Link as MUILink,
-   Grid,
-} from '@material-ui/core';
+import { Container, Typography, Grid } from '@material-ui/core';
 import InfluencerGallery from '../../components/Static/InfluencerGallery';
+
+//component import
+import { GoBackButton } from 'components';
 
 export function ExploreMore() {
    var userList = [
@@ -28,7 +23,7 @@ export function ExploreMore() {
       'littlesassyrealclassy',
       'discoverherstyle',
       // 'deepak',
-      // 'deepak',
+      // 'newaccuser',
       // 'deepak',
       // 'deepak',
       // 'deepak',
@@ -39,6 +34,7 @@ export function ExploreMore() {
    return (
       <div className="margin-top-80">
          <Container maxWidth="lg">
+            <GoBackButton />
             <Container maxWidth="lg" style={{ margin: '40px auto' }}>
                <Typography variant="h5">
                   If it's in trend, you’ll find it here.

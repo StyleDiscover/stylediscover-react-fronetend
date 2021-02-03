@@ -6,7 +6,7 @@ import Hero from 'components/Static/HeroBrand';
 import ImageWithFrame from 'components/Static/ImageWithFrame';
 
 //assets
-import SectionOneImage from 'assets/BrandSectionOne.png';
+import SectionOneImage from 'assets/BrandSectionOne.jpg';
 import SectionOneBackground from 'assets/SectionBackground.png';
 import SectionOneBackgroundFlipped from 'assets/SectionBackgroundFlipped.png';
 import FormBackground from 'assets/FormBackground.png';

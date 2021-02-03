@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 
 //context and events
 import { UserContext } from '../../context/UserContext';
-import { MainPostContext } from '../../context/MainPostContext';
 import { MyComponentsContext } from '../../context/MyComponentContext';
 import { WishlistContext } from '../../context/WishlistContext';
 import { logout, logoutAll } from '../../events/UserEvents';
@@ -16,7 +15,6 @@ import {
    Container,
    IconButton,
    Avatar,
-   Link as MUILink,
    Slide,
    SwipeableDrawer,
    useScrollTrigger,
@@ -26,7 +24,6 @@ import {
    makeStyles,
    ListItemIcon,
    ListItemText,
-   Badge,
    Typography,
 } from '@material-ui/core';
 
@@ -35,13 +32,13 @@ import {
    Person,
    PowerSettingsNew,
    Favorite,
-   Home,
    Menu,
    Add,
    Info,
    SupervisorAccount,
    CollectionsBookmark,
    InsertChartOutlined,
+   Search,
 } from '@material-ui/icons';
 
 //use style
@@ -78,7 +75,6 @@ function HideOnScroll(props) {
 export default function Navbar(props) {
    // get user dispatch
    const { user, userDispatch } = useContext(UserContext);
-   const { mainPostDispatch } = useContext(MainPostContext);
    const { wishlistDispatch } = useContext(WishlistContext);
    const { componentDispatch } = useContext(MyComponentsContext);
 
@@ -91,18 +87,7 @@ export default function Navbar(props) {
    //logout function
    const handleLogout = (event) => {
       const token = localStorage.AccessToken;
-      logout(
-         token,
-         userDispatch,
-         mainPostDispatch,
-         componentDispatch,
-         wishlistDispatch
-      );
-   };
-
-   const handleLogoutAll = (event) => {
-      const token = localStorage.AccessToken;
-      logoutAll(token, userDispatch);
+      logout(token, userDispatch, componentDispatch, wishlistDispatch);
    };
 
    //drawer toggle
@@ -143,7 +128,7 @@ export default function Navbar(props) {
                </ListItem>
             </List>
          )}
-         {user.isAuthenticated && user.userData.modified_username && (
+         {user.isAuthenticated && (
             <List>
                <ListItem button key="login" component={Link} to="/profile">
                   <ListItemIcon>
@@ -216,6 +201,13 @@ export default function Navbar(props) {
                      <ListItemText primary="Analytics" />
                   </ListItem>
                )}
+               <ListItem button key="explore" component={Link} to="/sd/explore">
+                  <ListItemIcon>
+                     {' '}
+                     <Search />
+                  </ListItemIcon>
+                  <ListItemText primary="Explore" />
+               </ListItem>
             </List>
          )}
          {user.isAuthenticated && user.userData.account_type === 'AD' && (

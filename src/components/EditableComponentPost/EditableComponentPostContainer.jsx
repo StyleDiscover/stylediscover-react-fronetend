@@ -1,19 +1,8 @@
 //react imports
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 
 //context and events
-import { UserContext } from 'context/UserContext';
-import { MainPostContext } from 'context/MainPostContext';
 import { sendEventAnalytics } from 'events/AnalyticsEvents';
-import {
-   getComponentById,
-   addComponent,
-   editMainPost,
-   getMainPostById,
-   getSiteRecord,
-   getSiteMedia,
-   editComponent,
-} from 'events/MainPostEvents';
 
 //components imports
 import { Cropper } from 'components';
@@ -24,15 +13,23 @@ import ComponentDialogView from './ComponentDialogView';
 import ChangeMediaDialogView from './ChangeMediaDialogView';
 import DeleteComponentView from './DeleteComponentView';
 
+//hooks
+import {
+   useEditComponent,
+   useGetComponentId,
+   useGetSiteMedia,
+   getSiteRecord,
+   useAddComponent,
+   useEditPost,
+   useGetPostId,
+} from 'hooks';
+
 export function EditableComponentPostContainer({
    componentId,
    mainPostId,
-   mainPostComponentList,
    userId,
-   refreshMainPost,
 }) {
    //states
-   const [componentPostData, setComponentPostData] = useState(); //component post data
    const [open, setOpen] = useState(false); //buy dialog open flag
    const [mediaPreview, setMediaPreview] = useState();
 
@@ -45,16 +42,25 @@ export function EditableComponentPostContainer({
    const [mediaUrl, setMediaUrl] = useState('');
    const [pageUrl, setPageUrl] = useState();
 
-   //use context
-   const { mainPosts, mainPostDispatch } = useContext(MainPostContext);
-   const { user } = useContext(UserContext);
+   //react-query queries
+   const {
+      data: componentPostData,
+      status: componentPostStatus,
+      error: componentPostError,
+   } = useGetComponentId(componentId);
+   const { data: mainPostData, status: mainPostStatus } = useGetPostId(
+      mainPostId
+   );
+
+   //react-query mutations
+   const { mutate: editComponent } = useEditComponent();
+   const { mutate: getSiteMedia } = useGetSiteMedia();
+   const { mutate: addComponent } = useAddComponent();
+   const { mutate: editMainPost } = useEditPost();
 
    useEffect(() => {
-      getComponentById(componentId).then((data) => {
-         setComponentPostData(data);
-         setPageUrl(data.page_url);
-      });
-   }, [componentId]);
+      setPageUrl(componentPostData?.page_url);
+   }, [componentPostData?.page_url, componentPostData?.media_url]);
 
    //GUnctions
    //dialog functions
@@ -69,7 +75,7 @@ export function EditableComponentPostContainer({
    //for change dialog
    const handleChangeDialogClose = () => {
       setChangeDialogOpen(false);
-      mainPostDispatch({ type: 'UNSET_ERROR_DATA' });
+      // setMediaPreview(componentPostData.media_url);
       setMediaPreview();
    };
 
@@ -81,9 +87,8 @@ export function EditableComponentPostContainer({
 
    const handleUploadChangeMedia = (event) => {
       if (event.target.files && event.target.files[0]) {
-         // setMediaPreview(URL.createObjectURL(event.target.files[0]));
+         setMediaPreview(URL.createObjectURL(event.target.files[0]));
          setMediaUrl(event.target.files[0]);
-         handleCropDialogOpen();
       }
    };
 
@@ -107,14 +112,27 @@ export function EditableComponentPostContainer({
          }
       }
 
-      siteRecords = await getSiteRecord(hostname);
-      siteMediaUrl = await getSiteMedia(hostname, pageUrl, mainPostDispatch);
+      await getSiteRecord(hostname).then((data) => {
+         siteRecords = data;
+      });
+
+      getSiteMedia(
+         {
+            siteRecords,
+            url: pageUrl,
+         },
+         { onSuccess: (data) => (siteMediaUrl = data) }
+      );
 
       //set component data for new component
       var newComponentData = new FormData();
       newComponentData.append(
          'media_url',
-         mediaUrl ? mediaUrl : componentPostData.media_url
+         siteMediaUrl
+            ? siteMediaUrl
+            : mediaUrl
+            ? mediaUrl
+            : componentPostData.media_url
       );
       newComponentData.append('page_url', pageUrl);
       newComponentData.append('site_records', siteRecords);
@@ -122,46 +140,45 @@ export function EditableComponentPostContainer({
       // get a new component id
 
       if (componentPostData.page_url !== pageUrl && mediaUrl) {
-         newComponentList = mainPostComponentList.filter(
-            (mainPostComponent) => mainPostComponent !== componentId
+         addComponent(
+            { componentData: newComponentData, postId: mainPostId },
+            {
+               onSuccess: (data) => {
+                  newComponentList = mainPostData?.component_posts?.filter(
+                     (mainPostComponent) => mainPostComponent !== componentId
+                  );
+                  newComponentId = data.id;
+                  newComponentList = [...newComponentList, newComponentId];
+                  var newMainPostData = new FormData();
+                  newComponentList.forEach((component) => {
+                     newMainPostData.append('component_posts', component);
+                  });
+
+                  editMainPost({
+                     id: mainPostId,
+                     data: newMainPostData,
+                  });
+               },
+            }
          );
-         newComponentId = await addComponent(
-            newComponentData,
-            mainPostDispatch
-         );
-         if (
-            !newComponentList.includes(newComponentId) &&
-            newComponentId !== -1
-         ) {
-            newComponentList = [...newComponentList, newComponentId];
-         }
+         console.log(newComponentList);
       } else {
-         newComponentList = mainPostComponentList;
-         newComponentId = await editComponent(
-            newComponentData,
-            componentId,
-            mainPostDispatch
-         );
+         newComponentList = mainPostData?.component_posts;
+         editComponent({
+            id: componentId,
+            componentData: newComponentData,
+         });
+         var newMainPostData = new FormData();
+         newComponentList.forEach((component) => {
+            newMainPostData.append('component_posts', component);
+         });
+
+         editMainPost({
+            id: mainPostId,
+            data: newMainPostData,
+         });
       }
 
-      //edit main post
-      var newMainPostData = new FormData();
-      newComponentList.forEach((component) => {
-         newMainPostData.append('component_posts', component);
-      });
-
-      await editMainPost(newMainPostData, mainPostId, mainPostDispatch).then(
-         async () => {
-            await getComponentById(newComponentId).then((data) => {
-               setComponentPostData(data);
-               setPageUrl(data.page_url);
-            });
-            await getMainPostById(mainPostId, mainPostDispatch).then((data) =>
-               refreshMainPost(data)
-            );
-         }
-      );
-      componentId = newComponentId;
       handleChangeDialogClose();
    };
 
@@ -181,7 +198,7 @@ export function EditableComponentPostContainer({
 
    const handleDeletePost = async (event) => {
       event.preventDefault();
-      var newComponentList = mainPostComponentList.filter(
+      var newComponentList = mainPostData?.component_posts.filter(
          (component) => component !== componentId
       );
 
@@ -190,13 +207,10 @@ export function EditableComponentPostContainer({
          newMainPostData.append('component_posts', component);
       });
 
-      await editMainPost(newMainPostData, mainPostId, mainPostDispatch).then(
-         async () => {
-            await getMainPostById(mainPostId, mainPostDispatch).then((data) =>
-               refreshMainPost(data)
-            );
-         }
-      );
+      editMainPost({
+         id: mainPostId,
+         data: newMainPostData,
+      });
       handleDeleteDialogClose();
    };
 
@@ -207,16 +221,18 @@ export function EditableComponentPostContainer({
 
    //for component dialog
    const getWebsiteFromUrl = (url) => {
-      if (url.toString().split('://')[1].split('.').length > 2) {
-         return url.toString().split('://')[1].split('.')[1];
-      } else {
-         return url.toString().split('://')[1].split('.')[0];
+      if (url) {
+         if (url.toString().split('://')[1].split('.').length > 2) {
+            return url.toString().split('://')[1].split('.')[1];
+         } else {
+            return url.toString().split('://')[1].split('.')[0];
+         }
       }
    };
 
    return (
       <div>
-         {componentPostData && (
+         {componentPostStatus === 'success' && (
             <ComponentImageView
                handleClickOpen={handleClickOpen}
                handleChangeDialogOpen={handleChangeDialogOpen}
@@ -224,7 +240,7 @@ export function EditableComponentPostContainer({
                componentPostData={componentPostData}
             />
          )}
-         {componentPostData && (
+         {componentPostStatus === 'success' && (
             <ComponentDialogView
                handleClose={handleClose}
                open={open}
@@ -245,7 +261,9 @@ export function EditableComponentPostContainer({
             mediaUrl={mediaUrl}
             pageUrl={pageUrl}
             changeDialogOpen={changeDialogOpen}
-            mainPosts={mainPosts}
+            status={componentPostStatus}
+            errors={componentPostError}
+            handleCropDialogOpen={handleCropDialogOpen}
          />
          <Cropper
             openDialog={cropDialogOpen}
@@ -264,7 +282,7 @@ export function EditableComponentPostContainer({
             deleteDialogOpen={deleteDialogOpen}
             handleDeleteDialogClose={handleDeleteDialogClose}
             handleDeletePost={handleDeletePost}
-            mainPosts={mainPosts}
+            status={componentPostStatus}
          />
       </div>
    );

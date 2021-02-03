@@ -1,18 +1,14 @@
 //react imports
 import React, { useContext, useState, useEffect, Suspense } from 'react';
-import { useHistory } from 'react-router-dom';
 
 //context and events imports
-import { MainPostContext } from 'context/MainPostContext';
 import { MyComponentsContext } from 'context/MyComponentContext';
 import { UserContext } from 'context/UserContext';
-import {
-   addComponent,
-   getSiteRecord,
-   getSiteMedia,
-} from 'events/MainPostEvents';
 import { setMyComponents } from 'events/MyComponentEvents';
 import { Cropper } from 'components';
+
+//hooks
+import { useAddComponent, useGetSiteMedia, getSiteRecord } from 'hooks';
 
 const AddComponentView = React.lazy(() => import('./AddComponentView'));
 
@@ -24,14 +20,10 @@ export function AddComponentContainer({
    handleSubmit,
 }) {
    //use context
-   const { mainPosts, mainPostDispatch } = useContext(MainPostContext);
    const { user } = useContext(UserContext);
    const { myComponentData, componentDispatch } = useContext(
       MyComponentsContext
    );
-
-   //use history
-   const history = useHistory();
 
    //add component dialog states
    const [addDialogOpen, setAddDialogOpen] = useState(false);
@@ -56,7 +48,6 @@ export function AddComponentContainer({
    const handleAddDialogClose = () => {
       setAddDialogOpen(false);
       closeDialog(false);
-      mainPostDispatch({ type: 'UNSET_ERROR_DATA' });
    };
 
    const handleAddDialogOpen = (open) => {
@@ -74,8 +65,8 @@ export function AddComponentContainer({
       if (event.target.files && event.target.files[0]) {
          if (event.target.files[0].size / (1024 * 1024) < 50) {
             if (event.target.files[0].type.startsWith('image')) {
+               setMediaPreview(URL.createObjectURL(event.target.files[0]));
                setMediaUrl(event.target.files[0]);
-               handleCropDialogOpen();
             } else {
                window.alert('Please upload an image');
             }
@@ -92,56 +83,77 @@ export function AddComponentContainer({
       setComponentList([...componentList, ...componentsToAdd]);
    };
 
+   const { mutate: getSiteMedia } = useGetSiteMedia();
+   const {
+      mutate: addComponent,
+      status: addComponentStatus,
+      error: addComponentError,
+   } = useAddComponent();
+
    const handleAddDialogSubmit = async (event) => {
       event.preventDefault();
       if (myComponentData.addComponents.length > 0) {
-         mainPostDispatch({ type: 'UNSET_ERROR_DATA' });
          await removeDuplicates(myComponentData.addComponents);
          componentDispatch({ type: 'UNSET_STATE' });
          handleAddDialogClose();
       } else {
-         var siteRecords;
-         var hostname;
-         var tempComponentId;
-         var siteMediaUrl;
+         if (pageUrl.startsWith('https')) {
+            var siteRecords;
+            var hostname;
+            var tempComponentId;
+            var siteMediaUrl;
 
-         if (pageUrl.startsWith('http')) {
-            var tempPageUrl = new URL(pageUrl);
-            var tempHostname = tempPageUrl.hostname.toString();
-            if (tempHostname.startsWith('www')) {
-               hostname = tempHostname.substring(4);
-            } else {
-               hostname = tempHostname;
+            if (pageUrl.startsWith('http')) {
+               var tempPageUrl = new URL(pageUrl);
+               var tempHostname = tempPageUrl.hostname.toString();
+               if (tempHostname.startsWith('www')) {
+                  hostname = tempHostname.substring(4);
+               } else {
+                  hostname = tempHostname;
+               }
             }
-         }
 
-         siteRecords = await getSiteRecord(hostname);
-         siteMediaUrl = await getSiteMedia(hostname, pageUrl, mainPostDispatch);
+            await getSiteRecord(hostname).then((data) => {
+               siteRecords = data;
+            });
 
-         var componentData = new FormData();
-         componentData.append(
-            'media_url',
-            !siteMediaUrl && mediaType === 'IM'
-               ? mediaUrl
+            getSiteMedia(
+               {
+                  siteRecords,
+                  url: pageUrl,
+               },
+               { onSuccess: (data) => (siteMediaUrl = data) }
+            );
+
+            var componentData = new FormData();
+            componentData.append(
+               'media_url',
+               !siteMediaUrl && mediaType === 'IM'
                   ? mediaUrl
-                  : media
-               : mediaUrl
-               ? mediaUrl
-               : siteMediaUrl
-         );
-         componentData.append('page_url', pageUrl);
-         componentData.append('site_records', siteRecords);
-         componentData.append('is_scraped', siteMediaUrl ? true : false);
+                     ? mediaUrl
+                     : media
+                  : mediaUrl
+                  ? mediaUrl
+                  : siteMediaUrl
+            );
+            componentData.append('page_url', pageUrl);
+            componentData.append('site_records', siteRecords);
+            componentData.append('is_scraped', siteMediaUrl ? true : false);
 
-         tempComponentId = await addComponent(componentData, mainPostDispatch);
-         tempComponentId = tempComponentId.toString();
-
-         if (
-            !componentList.includes(tempComponentId) &&
-            tempComponentId !== '-1'
-         ) {
-            setComponentList([...componentList, tempComponentId]);
-            handleAddDialogClose();
+            addComponent(
+               { componentData },
+               {
+                  onSuccess: (data) => {
+                     tempComponentId = data.id.toString();
+                     if (!componentList.includes(tempComponentId)) {
+                        setComponentList([...componentList, tempComponentId]);
+                        handleAddDialogClose();
+                     }
+                  },
+               }
+            );
+         } else {
+            alert('Please enter a secure URL');
          }
       }
       setMyComponents(user.userData.username, componentDispatch);
@@ -162,9 +174,12 @@ export function AddComponentContainer({
                handleUploadComponentImage={handleUploadComponentImage}
                addDialogOpen={addDialogOpen}
                pageUrl={pageUrl}
-               mainPosts={mainPosts}
+               status={addComponentStatus}
+               errors={addComponentError}
                componentsSeleted={componentsSeleted}
                mediaPreview={mediaPreview}
+               handleCropDialogOpen={handleCropDialogOpen}
+               mediaUrl={mediaUrl}
             />
          </Suspense>
          {/* CROPPING STARTS */}

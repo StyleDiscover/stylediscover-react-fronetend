@@ -27,11 +27,9 @@ ReactDOM.render(
    <React.StrictMode>
       <WishlistContextProvider>
          <UserContextProvider>
-            <MainPostContextProvider>
-               <MyComponentsContextProvider>
-                  <App />
-               </MyComponentsContextProvider>
-            </MainPostContextProvider>
+            <MyComponentsContextProvider>
+               <App />
+            </MyComponentsContextProvider>
          </UserContextProvider>
       </WishlistContextProvider>
    </React.StrictMode>,

@@ -34,7 +34,6 @@ const useStyle = makeStyles({
 });
 
 export default function SelectableComponentView({
-   handleClickOpen,
    componentPostData,
    myComponentData,
    componentId,
@@ -48,7 +47,6 @@ export default function SelectableComponentView({
          <Paper square>
             {
                <CardMedia
-                  onClick={handleClickOpen}
                   image={componentPostData.media_url}
                   className={classes.imgStyles}
                   classes={{

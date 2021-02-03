@@ -16,6 +16,7 @@ import WishlistGoBackToUserView from './WishlistGoBackToUserView';
 import WishlistExploreCreatorsView from './WishlistExploreCreatorsView';
 
 import { LoadingBar } from 'components';
+import NoWishlistView from './NoWishlistView';
 
 export function WishlistContainer({ history }) {
    //state
@@ -53,18 +54,7 @@ export function WishlistContainer({ history }) {
                Your Wishlist
             </Typography>
             {wishlists.loading && <LoadingBar />}
-            {wishlists.wishlists.length === 0 && (
-               <Typography
-                  style={{
-                     fontFamily: 'Roboto, sans-serif',
-                     fontWeight: '400',
-                     textAlign: 'center',
-                  }}
-                  variant="body2"
-               >
-                  No Wishlists
-               </Typography>
-            )}
+            {wishlists.wishlists.length === 0 && <NoWishlistView />}
 
             <WishlistView wishlists={wishlists} />
 

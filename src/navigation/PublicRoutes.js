@@ -1,7 +1,7 @@
 import React from 'react';
 
 //router-dom imports
-import { Route, Switch, Redirect } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 
 //constants
 import {
@@ -23,8 +23,10 @@ import {
    PRIVACY_POLICY,
    CREATE,
    MY_COLLECTION,
-   CHANGE_USERNAME,
+   CREATE_BLOG,
    EXPLORE,
+   BLOGS,
+   BLOG_PAGE,
 } from './Constants';
 
 //utils
@@ -54,6 +56,9 @@ const { Register } = loadable(() => import('pages'));
 const { ResetPassword } = loadable(() => import('pages'));
 const { ResetPasswordConfirm } = loadable(() => import('pages'));
 const { Wishlist } = loadable(() => import('pages'));
+const { CreateBlog } = loadable(() => import('pages'));
+const { Blogs } = loadable(() => import('pages'));
+const { BlogsPage } = loadable(() => import('pages'));
 
 export default function PublicRoutes() {
    return (
@@ -65,6 +70,7 @@ export default function PublicRoutes() {
          <Route exact path={I_AM_INFLUENCER} component={IAmInfluencer} />
          <Route exact path={T_AND_C} component={TermsAndConditions} />
          <Route exact path={PRIVACY_POLICY} component={PrivacyPolicy} />
+         <Route exact path={BLOGS} component={Blogs} />
 
          {/* AUTH ROUTES CANNOT ACCESS WHEN AUTHENTICATED*/}
          <AuthRoute exact path={LOGIN} component={Login} />
@@ -73,6 +79,7 @@ export default function PublicRoutes() {
 
          {/* UNAUTH ROUTE CANNOT ACCESS WHEN UNAUTHENTICATED*/}
          <UnAuthRoute exact path={CREATE} component={Create} />
+         <UnAuthRoute exact path={CREATE_BLOG} component={CreateBlog} />
          <UnAuthRoute exact path={PROFILE} component={Profile} />
          <UnAuthRoute exact path={WISHLIST} component={Wishlist} />
          <UnAuthRoute exact path={ANALYTICS} component={Analytics} />
@@ -91,6 +98,7 @@ export default function PublicRoutes() {
          {/* USERNAME ROUTE */}
          <Route exact path={USER_PAGE} component={UserPage} />
          <Route exact path={POST_PAGE} component={PostPage} />
+         <Route exact path={BLOG_PAGE} component={BlogsPage} />
       </Switch>
    );
 }

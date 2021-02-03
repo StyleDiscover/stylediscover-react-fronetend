@@ -7,15 +7,18 @@ import ImageSlider from 'components/Static/ImageSlider';
 import ImageWithContent from 'components/Static/ImageWithContent';
 
 //assets
-import SectionOneImage from 'assets/SectionOne.png';
+import SectionOneImage from 'assets/SectionOne.jpg';
 import SectionOneBackground from 'assets/SectionBackground.png';
 
 //slider image
-import sheenaImg from 'assets/slider/1.png';
-import limitlessImg from 'assets/slider/2.png';
-import urmiImg from 'assets/slider/3.png';
+import sheenaImg from 'assets/slider/1.jpg';
+import limitlessImg from 'assets/slider/2.jpg';
+import urmiImg from 'assets/slider/3.jpg';
 import chairImg from 'assets/slider/4.png';
 import discoverherstyleImg from 'assets/slider/5.jpeg';
+
+//nav imports
+import { I_AM_BRAND, I_AM_INFLUENCER } from 'navigation/Constants';
 
 //MUI Imports
 import {
@@ -24,6 +27,7 @@ import {
    Typography,
    Link as MUILink,
    Container,
+   Button,
 } from '@material-ui/core';
 
 //use styles
@@ -99,13 +103,18 @@ export function Home() {
                ]}
                title={
                   <>
-                     <Typography variant="h3" className={classes.monFont}>
+                     <Typography
+                        variant="h3"
+                        className={classes.monFont}
+                        align="center"
+                     >
                         IF IT'S IN TREND, YOU'LL FIND IT HERE.
                      </Typography>
                      <Typography
                         variant="h6"
                         className={classes.monFont}
                         style={{ marginTop: 10 }}
+                        align="center"
                      >
                         Check out the latest styles by our top influencers
                      </Typography>
@@ -117,13 +126,13 @@ export function Home() {
             {' '}
             {/* <ContentInMiddle background={false}> */}
             <Container maxWidth="sm">
-               <Grid container={true} spacing={3}>
+               <Grid container={true} spacing={2}>
                   <Grid item={true} xs={12} md={6} style={{ margin: 'auto' }}>
-                     <MUILink component={Link} to="/sd/iamabrand">
-                        <Typography
-                           variant="h5"
+                     <MUILink component={Link} to={I_AM_BRAND}>
+                        {/* <Typography
+                           variant="h6"
                            style={{
-                              padding: '20px 0px',
+                              padding: '10px 0px',
                               cursor: 'pointer',
                               backgroundColor: '#4f5964',
                               color: '#eacec5',
@@ -132,15 +141,18 @@ export function Home() {
                            align="center"
                         >
                            I am a Brand
-                        </Typography>
+                        </Typography> */}
+                        <Button variant="outlined" fullWidth={true}>
+                           I Am a brand
+                        </Button>
                      </MUILink>
                   </Grid>
                   <Grid item={true} xs={12} md={6} style={{ margin: 'auto' }}>
-                     <MUILink component={Link} to="/sd/iamaninfluencer">
-                        <Typography
-                           variant="h5"
+                     <MUILink component={Link} to={I_AM_INFLUENCER}>
+                        {/* <Typography
+                           variant="h6"
                            style={{
-                              padding: '20px 0px',
+                              padding: '10px 0px',
                               cursor: 'pointer',
                               backgroundColor: '#4f5964',
                               color: '#eacec5',
@@ -149,7 +161,10 @@ export function Home() {
                            align="center"
                         >
                            I am an Influencer
-                        </Typography>
+                        </Typography> */}
+                        <Button variant="outlined" fullWidth={true}>
+                           I Am an influencer
+                        </Button>
                      </MUILink>
                   </Grid>
                </Grid>

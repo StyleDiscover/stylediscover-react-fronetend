@@ -22,7 +22,7 @@ const useStyles = makeStyles({
 export default function DeleteMediaDialogView({
    deleteDialogOpen,
    handleDeleteDialogClose,
-   mainPosts,
+   status,
    handleDeletePost,
 }) {
    //usestyle
@@ -51,17 +51,17 @@ export default function DeleteMediaDialogView({
                <Button
                   onClick={handleDeleteDialogClose}
                   color="inherit"
-                  disabled={mainPosts.loading}
+                  disabled={status === 'loading'}
                >
                   Cancel
                </Button>
                <Button
                   onClick={handleDeletePost}
                   style={{ color: 'red' }}
-                  disabled={mainPosts.loading}
+                  disabled={status === 'loading'}
                >
                   Delete
-                  {mainPosts.loading && (
+                  {status === 'loading' && (
                      <CircularProgress
                         size={20}
                         className={classes.customProgress}

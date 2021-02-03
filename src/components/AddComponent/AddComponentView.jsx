@@ -92,12 +92,15 @@ export default function AddComponentView({
    addDialogOpen,
    handleAddDialogClose,
    pageUrl,
-   mainPosts,
+   status,
+   errors,
    handlePageUrlChange,
    componentsSeleted,
    handleUploadComponentImage,
    handleAddDialogSubmit,
    mediaPreview,
+   handleCropDialogOpen,
+   mediaUrl,
 }) {
    const classes = useStyle();
    return (
@@ -129,12 +132,8 @@ export default function AddComponentView({
                   value={pageUrl}
                   fullWidth={true}
                   className={classes.customDialogField}
-                  helperText={
-                     mainPosts.errorData.page_url
-                        ? mainPosts.errorData.page_url[0]
-                        : null
-                  }
-                  error={mainPosts.errorData.page_url ? true : false}
+                  helperText={errors?.page_url ? errors?.page_url[0] : null}
+                  error={errors?.page_url ? true : false}
                   onChange={handlePageUrlChange}
                   variant="outlined"
                   autoComplete="off"
@@ -167,11 +166,22 @@ export default function AddComponentView({
                         disabled={componentsSeleted}
                         fullWidth={true}
                      >
-                        Choose An Image Instead
+                        Choose An Image
                      </Button>
                   </label>
+                  <Button
+                     variant="outlined"
+                     color="primary"
+                     className={classes.customPublishButton}
+                     component="span"
+                     disabled={!mediaUrl}
+                     fullWidth={true}
+                     onClick={handleCropDialogOpen}
+                  >
+                     Crop Image
+                  </Button>
                </Container>
-               {mainPosts.errorData.media_url && (
+               {errors?.media_url && (
                   <Typography variant="body2" className={classes.customError}>
                      Cannot get the image, please uplaod an image instead
                   </Typography>
@@ -188,17 +198,17 @@ export default function AddComponentView({
                <Button
                   onClick={handleAddDialogClose}
                   color="inherit"
-                  disabled={mainPosts.loading}
+                  disabled={status === 'loading'}
                >
                   Cancel
                </Button>
                <Button
                   onClick={handleAddDialogSubmit}
                   color="primary"
-                  disabled={mainPosts.loading}
+                  disabled={status === 'loading'}
                >
                   Add Component
-                  {mainPosts.loading && (
+                  {status === 'loading' && (
                      <CircularProgress
                         size={20}
                         className={classes.customProgress}

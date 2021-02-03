@@ -51,7 +51,7 @@ export default function CreateContentView({
                      </Grid>
                   );
                })}
-            {componentList.length < 8 && media && (
+            {componentList.length < 8 && (
                <Grid item xs={3}>
                   <Paper
                      className={classes.paperImgStyle}
@@ -62,11 +62,6 @@ export default function CreateContentView({
                      <Add className={classes.customCreateButton} />
                   </Paper>
                </Grid>
-            )}
-            {!media && (
-               <Typography align="center" variant="body1">
-                  Please add a media before adding component.
-               </Typography>
             )}
          </Grid>
       </CardContent>

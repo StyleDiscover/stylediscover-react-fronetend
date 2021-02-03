@@ -39,12 +39,14 @@ export default function ChangeMediaDialogView({
    changeDialogOpen,
    handleChangeDialogClose,
    mediaPreview,
-   mainPosts,
+   status,
+   errors,
    pageUrl,
    handlePageUrlChange,
    mediaUrl,
    handleChangeMedia,
    handleUploadChangeMedia,
+   handleCropDialogOpen,
 }) {
    const classes = useStyle();
    return (
@@ -82,12 +84,8 @@ export default function ChangeMediaDialogView({
                value={pageUrl}
                fullWidth={true}
                className={classes.customDialogField}
-               helperText={
-                  mainPosts.errorData.page_url
-                     ? mainPosts.errorData.page_url[0]
-                     : null
-               }
-               error={mainPosts.errorData.page_url ? true : false}
+               helperText={errors?.page_url ? errors?.page_url[0] : null}
+               error={errors?.page_url ? true : false}
                onChange={handlePageUrlChange}
                variant="outlined"
                autoComplete="off"
@@ -112,12 +110,22 @@ export default function ChangeMediaDialogView({
                   Choose Image
                </Button>
             </label>
+            <Button
+               variant="outlined"
+               color="primary"
+               className={classes.customChangeMediaButton}
+               component="span"
+               disabled={!Boolean(mediaUrl)}
+               onClick={handleCropDialogOpen}
+            >
+               Crop Image
+            </Button>
          </DialogContent>
          <DialogActions>
             <Button
                onClick={handleChangeDialogClose}
                color="inherit"
-               disabled={mainPosts.loading}
+               disabled={status === 'loading'}
             >
                Cancel
             </Button>
@@ -126,8 +134,8 @@ export default function ChangeMediaDialogView({
                color="primary"
                variant="contained"
             >
-               Change Image
-               {mainPosts.loading && (
+               Edit Product
+               {status === 'loading' && (
                   <CircularProgress
                      size={20}
                      className={classes.customProgress}

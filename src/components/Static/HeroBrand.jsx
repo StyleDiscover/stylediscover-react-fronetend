@@ -10,9 +10,8 @@ import LazyHero from 'react-lazy-hero';
 import VideoWithContent from './VideoWithContent';
 
 //video import
-import HeroVideo from '../../assets/hero.mp4';
-import HeroImage from '../../assets/BrandHero.png';
-import HeroBackground from '../../assets/HeroBackground.png';
+import HeroImage from 'assets/BrandHero.jpg';
+import HeroBackground from 'assets/HeroBackground.png';
 
 //usestyles
 const useStyles = makeStyles({

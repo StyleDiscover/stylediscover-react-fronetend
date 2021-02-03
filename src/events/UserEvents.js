@@ -69,7 +69,6 @@ export const loginWithEmail = async (
             history.push(`/wishlist?username=${postUsername}`);
          }
          userDispatch({ type: 'NOT_LOADING' });
-         window.location.reload(false);
       })
       .catch((e) => {
          userDispatch({ type: 'UNSET_STATE' });
@@ -96,7 +95,6 @@ export const adminLoginAsUser = async (username, userDispatch, history) => {
          _setAuthToken(token);
          userDispatch({ type: 'NOT_LOADING' });
          history.push('/profile');
-         window.location.reload(false);
       })
       .catch((e) => {
          userDispatch({ type: 'LOADING' });
@@ -149,10 +147,8 @@ export const loginWithFacebook = async (
                );
             });
             history.push(`/wishlist?username=${postUsername}`);
-            window.location.reload(false);
          }
          userDispatch({ type: 'NOT_LOADING' });
-         window.location.reload(false);
       })
       .catch((e) => {
          userDispatch({ type: 'UNSET_STATE' });
@@ -261,7 +257,10 @@ export const registerWithEmail = async (
                   'add_wishlist'
                );
             });
-            ReactPixel.track('CompleteRegistration');
+            ReactPixel.track('CompleteRegistration', {
+               currency: 'INR',
+               value: '30',
+            });
             history.push(`/wishlist?username=${postUsername}`);
          }
          ReactPixel.track('CompleteRegistration');
@@ -308,7 +307,6 @@ export const logoutAll = async (token, userDispatch) => {
 export const logout = async (
    token,
    userDispatch,
-   mainPostDispatch,
    componentDispatch,
    wishlistDispatch
 ) => {
@@ -333,7 +331,6 @@ export const logout = async (
       })
       .catch((e) => {
          userDispatch({ type: 'UNSET_STATE' });
-         mainPostDispatch({ type: 'UNSET_STATE_LOGOUT' });
          componentDispatch({ type: 'UNSET_STATE' });
          wishlistDispatch({ type: 'UNSET_STATE' });
          userDispatch({ type: 'SET_ERROR_DATA', data: e.response.data });
@@ -363,7 +360,6 @@ export const setUserData = async (username, userDispatch) => {
 //set user data event
 export const getUserDataByUsername = async (username, userDispatch) => {
    userDispatch({ type: 'LOADING' });
-   const token = localStorage.AccessToken;
 
    const data = await axios
       .get(`/users/userdetails/${username}/`)

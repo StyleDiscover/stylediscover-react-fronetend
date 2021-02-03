@@ -18,7 +18,7 @@ const useStyle = makeStyles({
 export default function PublishButtonView({
    handlePublish,
    canPublish,
-   mainPosts,
+   status,
 }) {
    //use style
    const classes = useStyle();
@@ -30,10 +30,10 @@ export default function PublishButtonView({
          fullWidth={true}
          onClick={handlePublish}
          disableElevation={true}
-         disabled={!canPublish || mainPosts.loading}
+         disabled={!canPublish || status === 'loading'}
       >
          Publish
-         {mainPosts.loading && (
+         {status === 'loading' && (
             <CircularProgress size={20} className={classes.customProgress} />
          )}
       </Button>

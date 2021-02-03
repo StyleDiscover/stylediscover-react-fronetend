@@ -15,6 +15,7 @@ import { registerWithEmail } from 'events/UserEvents';
 import RegisterFormView from './RegisterFormView';
 import RegisterCheckBoxView from './RegisterCheckBoxView';
 import RegisterSubmitButtonView from './RegisterSubmitButtonView';
+import { POST_ENCRYPTION_KEY, WISHLIST_ENCRYPTION_KEY } from 'config/Constants';
 
 export function RegisterContainer({ history }) {
    //states
@@ -46,7 +47,7 @@ export function RegisterContainer({ history }) {
             .replace(/\*/g, '/');
          const wishlistId = AES.decrypt(
             wishlistIdEncrypted,
-            '2yPNdoy1yRQz5gDkg5mx'
+            WISHLIST_ENCRYPTION_KEY
          ).toString(enc);
          setWishlistId(wishlistId);
       }
@@ -58,7 +59,7 @@ export function RegisterContainer({ history }) {
             .replace(/\*/g, '/');
          const postId = AES.decrypt(
             postIdEncrypted,
-            'Pjmaq7EV2C7lQeaUuLVD'
+            POST_ENCRYPTION_KEY
          ).toString(enc);
          setPostId(postId);
       }
