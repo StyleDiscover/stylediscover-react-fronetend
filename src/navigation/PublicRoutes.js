@@ -27,6 +27,9 @@ import {
    EXPLORE,
    BLOGS,
    BLOG_PAGE,
+   PROFILE_TAB,
+   USER_PAGE_TAB,
+   SOW,
 } from './Constants';
 
 //utils
@@ -59,6 +62,7 @@ const { Wishlist } = loadable(() => import('pages'));
 const { CreateBlog } = loadable(() => import('pages'));
 const { Blogs } = loadable(() => import('pages'));
 const { BlogsPage } = loadable(() => import('pages'));
+const { SOWPage } = loadable(() => import('pages'));
 
 export default function PublicRoutes() {
    return (
@@ -67,6 +71,7 @@ export default function PublicRoutes() {
          <Route exact path={ABOUT_US} component={AboutUs} />
          <Route exact path={I_AM_BRAND} component={IAmBrand} />
          <Route exact path={EXPLORE} component={ExploreMore} />
+         <Route exact path={SOW} component={SOWPage} />
          <Route exact path={I_AM_INFLUENCER} component={IAmInfluencer} />
          <Route exact path={T_AND_C} component={TermsAndConditions} />
          <Route exact path={PRIVACY_POLICY} component={PrivacyPolicy} />
@@ -81,6 +86,7 @@ export default function PublicRoutes() {
          <UnAuthRoute exact path={CREATE} component={Create} />
          <UnAuthRoute exact path={CREATE_BLOG} component={CreateBlog} />
          <UnAuthRoute exact path={PROFILE} component={Profile} />
+         <UnAuthRoute exact path={PROFILE_TAB} component={Profile} />
          <UnAuthRoute exact path={WISHLIST} component={Wishlist} />
          <UnAuthRoute exact path={ANALYTICS} component={Analytics} />
          <UnAuthRoute exact path={MY_COLLECTION} component={MyCollection} />
@@ -98,6 +104,7 @@ export default function PublicRoutes() {
          {/* USERNAME ROUTE */}
          <Route exact path={USER_PAGE} component={UserPage} />
          <Route exact path={POST_PAGE} component={PostPage} />
+         <Route exact path={USER_PAGE_TAB} component={UserPage} />
          <Route exact path={BLOG_PAGE} component={BlogsPage} />
       </Switch>
    );

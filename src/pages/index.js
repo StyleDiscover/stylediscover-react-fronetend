@@ -1,7 +1,7 @@
 export { ProfileContainer as Profile } from './Profile/ProfileContainer';
 export { AboutUs } from './Static/AboutUs';
 export { ExploreMore } from './Static/ExploreMore';
-export { Home } from './Static/Home';
+export { HomeContainer as Home } from './Home/HomeContainer';
 export { IAmBrand } from './Static/IAmBrand';
 export { IAmInfluencer } from './Static/IAmInfluencer';
 export { PrivacyPolicy } from './Static/PrivacyPolicy';
@@ -20,3 +20,6 @@ export { WishlistContainer as Wishlist } from './Wishlist/WishlistContainer';
 export { CreateBlogContainer as CreateBlog } from './CreateBlog/CreateBlogContainer';
 export { BlogsContainer as Blogs } from './Blogs/BlogsContainer';
 export { BlogsPageContainer as BlogsPage } from './BlogsPage/BlogsPageContainer';
+export { MainPostCollectionContainer as MainPostCollection } from './MainPostCollection/MainPostCollectionContainer';
+export { MainPostPhotoOfContainer as MainPostPhotoOf } from './MainPostPhotoOf/MainPostPhotoOfContainer';
+export { SOWContainer as SOWPage } from './SOW/SOWContainer';

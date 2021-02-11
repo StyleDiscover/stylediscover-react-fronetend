@@ -11,6 +11,9 @@ export default function EditMenuView({
    handleDeleteDialogOpen,
    mainPostData,
    handleEditCaptionOpen,
+   handleEditCategoryOpen,
+   handleEditSourceOpen,
+   handleEditMentionOpen,
 }) {
    return (
       <div>
@@ -41,6 +44,21 @@ export default function EditMenuView({
             <MenuItem onClick={handleEditCaptionOpen}>
                <Typography variant="body1">Edit Caption</Typography>
             </MenuItem>
+            {mainPostData.account_type !== 'BR' && (
+               <MenuItem onClick={handleEditCategoryOpen}>
+                  <Typography variant="body1">Edit Category</Typography>
+               </MenuItem>
+            )}
+            {mainPostData.account_type !== 'BR' && (
+               <MenuItem onClick={handleEditSourceOpen}>
+                  <Typography variant="body1">Edit Source</Typography>
+               </MenuItem>
+            )}
+            {mainPostData.account_type !== 'BR' && (
+               <MenuItem onClick={handleEditMentionOpen}>
+                  <Typography variant="body1">Photo Of</Typography>
+               </MenuItem>
+            )}
             <MenuItem onClick={handleDeleteDialogOpen}>
                <Typography variant="body1" style={{ color: 'red' }}>
                   Delete

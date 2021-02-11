@@ -27,14 +27,13 @@ import {
 } from '@material-ui/core';
 
 //component imports
-import Navbar from './components/General/Navbar';
-
 //utils import
 import Theme from './utils/Theme';
 import Footer from './components/Static/Footer';
 
 import ScrollToTop from './components/General/ScrollToTop';
 import PublicRoutes from './navigation/PublicRoutes';
+import { NavigationBar } from 'components/NavigationBar';
 
 //Axios Settings
 axios.defaults.baseURL =
@@ -86,7 +85,8 @@ function App() {
          <QueryClientProvider client={queryClient}>
             <MUIThemeProvider theme={theme}>
                <Router>
-                  <Navbar />
+                  {/* <Navbar /> */}
+                  <NavigationBar />
                   {/* //scroll to top */}
                   <ScrollToTop />
                   <PublicRoutes />

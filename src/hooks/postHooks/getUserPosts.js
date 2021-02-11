@@ -3,7 +3,6 @@ import { useInfiniteQuery, useQueryClient } from 'react-query';
 
 export function useGetPosts(username, enable, id) {
    const queryClient = useQueryClient();
-
    return useInfiniteQuery(
       ['posts', username],
       async ({ pageParam = 1 }) => {
@@ -15,8 +14,12 @@ export function useGetPosts(username, enable, id) {
          return data;
       },
       {
-         enabled: !!enable,
-         getNextPageParam: (lastPage) => lastPage.next,
+         enabled: enable,
+         getNextPageParam: (lastPage) => {
+            if (enable) {
+               return lastPage.next;
+            }
+         },
          onSuccess: (posts) => {
             posts.pages.forEach((page) => {
                page.results.forEach((post) => {

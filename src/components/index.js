@@ -25,3 +25,8 @@ export { InfiniteScrollIndicator } from './General/InfiniteScrollIndicator';
 export { BlogPostContainer as BlogPost } from './BlogPost/BlogPostContainer';
 export { BlogActionContainer as BlogAction } from './BlogsCommon/BlogsAction/BlogActionContainer';
 export { MenuList } from './General/MenuList';
+export { CustomTabsContainer as CustomTabs } from './CustomTabs/CustomTabsContainer';
+export { CollectionGalleryContainer as CollectionGallery } from './CollectionGallery/CollectionGalleryContainer';
+export { SpacedBox } from './General/SpacedBox';
+export { QuizContainer as Quiz } from '../pages/Quiz/QuizContainer';
+export { SearchUserContainer as SearchUser } from './SearchUser/SearchUserContainer';

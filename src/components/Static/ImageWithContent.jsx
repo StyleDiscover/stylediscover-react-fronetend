@@ -8,7 +8,6 @@ import { SIGNUP } from 'navigation/Constants';
 import {
    Container,
    Grid,
-   Paper,
    Typography,
    Button,
    makeStyles,
@@ -17,7 +16,6 @@ import {
 } from '@material-ui/core';
 
 //MUI icons
-import { WhatsApp } from '@material-ui/icons';
 
 //use styles
 const useStyles = makeStyles({
@@ -72,7 +70,6 @@ export default function ImageWithContent(props) {
       title,
       subtitle,
       content,
-      ctaText,
       imgUrl,
       cta,
       background,

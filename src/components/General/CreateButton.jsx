@@ -7,13 +7,13 @@ import { Container, Button } from '@material-ui/core';
 //MUI icons
 import { Add } from '@material-ui/icons';
 
-export function CreateButton({ text, destination, position, vposition }) {
+export function CreateButton({ text, destination, position }) {
    //history
    const history = useHistory();
 
    return (
       <Container
-         maxWidth="xs"
+         maxWidth="lg"
          style={{
             padding: '0px',
             margin: 'auto',

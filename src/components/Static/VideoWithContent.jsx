@@ -80,7 +80,7 @@ export default function VideoWithContent(props) {
    );
 
    const imageMarkup = (
-      <div style={{ padding: 35 }}>
+      <Container maxWidth="lg" style={{ padding: 35 }}>
          {!fullwidth && (
             <Paper elevation="5" style={{ width: '250px', margin: 'auto' }}>
                <CardMedia
@@ -103,7 +103,7 @@ export default function VideoWithContent(props) {
                ></CardMedia>
             </Paper>
          )}
-      </div>
+      </Container>
    );
 
    return (

@@ -9,7 +9,7 @@ import { UserContext } from 'context/UserContext';
 import { Container, Card, Divider } from '@material-ui/core';
 
 //hooks
-import { usePublish } from 'hooks';
+import { useGetCategory, usePublish } from 'hooks';
 
 //import components
 import { AddComponents } from 'components';
@@ -45,6 +45,8 @@ export function CreateContainer() {
 
    //hooks
    const { mutate: publish, status: publishStatus } = usePublish();
+
+   const { data: categoryData, status: categoryStatus } = useGetCategory();
 
    const addMainPicture = (event) => {
       if (event.target.files && event.target.files[0]) {
@@ -86,10 +88,22 @@ export function CreateContainer() {
 
    const handlePublish = async (event) => {
       event.preventDefault();
+      const url_string = window.location.href;
+      const url = new URL(url_string);
+      const category = url.searchParams.get('category');
+
       var mainPostData = new FormData();
       mainPostData.append('media_url', media);
       mainPostData.append('media_type', mediaType);
       mainPostData.append('caption', caption);
+
+      categoryStatus === 'success' &&
+         category &&
+         categoryData?.choices?.forEach((cat) => {
+            if (cat[0] === category) {
+               mainPostData.append('category', category);
+            }
+         });
 
       publish({
          mainPostData,

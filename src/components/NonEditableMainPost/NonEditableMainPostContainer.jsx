@@ -1,6 +1,6 @@
 //react imports
-import React, { useState, useEffect, useContext } from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import React from 'react';
+import { useHistory } from 'react-router-dom';
 
 //MUI imports
 import { Card } from '@material-ui/core';
@@ -17,7 +17,6 @@ import NonEditableMainPostMediaView from './NonEditableMainPostMediaView';
 import NonEditableMainPostContentView from './NonEditableMainPostContentView';
 
 //components imports
-import { MainPostCaption } from 'components';
 import { POST_ENCRYPTION_KEY } from 'config/Constants';
 
 export function NonEditableMainPostContainer({ id }) {
@@ -43,9 +42,9 @@ export function NonEditableMainPostContainer({ id }) {
                   encryptedId={encryptedId}
                />
 
-               {mainPostData.caption !== '' && (
+               {/* {mainPostData.caption !== '' && (
                   <MainPostCaption caption={mainPostData.caption} />
-               )}
+               )} */}
                <NonEditableMainPostContentView mainPostData={mainPostData} />
             </Card>
          )}

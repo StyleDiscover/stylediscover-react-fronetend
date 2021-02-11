@@ -5,12 +5,18 @@ import { CardHeader, Typography, Avatar } from '@material-ui/core';
 
 //time ago
 import TimeAgo from 'react-timeago';
+import { Link } from 'react-router-dom';
 
 export default function PostPageHeaderView({ mainPostData }) {
    return (
       <CardHeader
          title={
-            <Typography variant="body1" style={{ fontSize: 14 }}>
+            <Typography
+               variant="body1"
+               style={{ fontSize: 14, textDecoration: 'none', color: '#333' }}
+               component={Link}
+               to={'/' + mainPostData.username}
+            >
                {mainPostData.name ? mainPostData.name : mainPostData.username}
             </Typography>
          }

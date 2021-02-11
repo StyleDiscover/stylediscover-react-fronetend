@@ -3,6 +3,7 @@ import React from 'react';
 
 //MUI imports
 import { Paper, Typography, Container } from '@material-ui/core';
+import { Quiz } from 'components';
 
 export function AboutUs() {
    return (
@@ -30,6 +31,7 @@ export function AboutUs() {
             </Typography>
             <br />
          </Paper>
+         <Quiz url="https://docs.google.com/forms/d/e/1FAIpQLScMesRJpnD7tROTLv3HOCBba_wDzWdaTw7L7dmcOgUNoas3Uw/viewform?embedded=true" />
       </Container>
    );
 }

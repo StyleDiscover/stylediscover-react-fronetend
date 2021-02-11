@@ -3,7 +3,6 @@ import React, { useContext, useState, useEffect } from 'react';
 
 //context and events
 import { WishlistContext } from 'context/WishlistContext';
-import { UserContext } from 'context/UserContext';
 
 //MUI imports
 import { Container, Typography } from '@material-ui/core';

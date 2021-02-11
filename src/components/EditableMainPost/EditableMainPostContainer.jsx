@@ -20,6 +20,9 @@ import { AddComponents, MainPostCaption } from 'components';
 import MediaView from './MediaView';
 import EditCaptionDialog from './EditCaptionDialog';
 import { POST_ENCRYPTION_KEY } from 'config/Constants';
+import EditCategoryDialogView from './EditCategoryDialogView';
+import EditSourceDialog from './EditSourceView';
+import EditMentionDialog from './EditMentionView';
 
 export function EditableMainPostContainer({ id }) {
    //use state
@@ -40,6 +43,18 @@ export function EditableMainPostContainer({ id }) {
    const [captionDialog, setCaptionDialog] = useState(false);
    const [caption, setCaption] = useState(null);
 
+   //edit category
+   const [category, setCategory] = useState(null);
+   const [categoryDialog, setCategoryDialog] = useState(null);
+
+   //edit source
+   const [source, setSource] = useState(null);
+   const [sourceDialog, setSourceDialog] = useState(null);
+
+   //edit mention
+   const [mention, setMention] = useState(null);
+   const [mentionDialog, setMentionDialog] = useState(null);
+
    //history
    const history = useHistory();
 
@@ -52,6 +67,19 @@ export function EditableMainPostContainer({ id }) {
    const { data: mainPostData, status: mainPostStatus } = useGetPostId(id);
    const { mutate: editPost, status: editStatus } = useEditPost();
    const { mutate: deletePost, status: deleteStatus } = useDeletePost();
+
+   //use effect
+   React.useEffect(() => {
+      mainPostData?.caption && setCaption(mainPostData.caption);
+      mainPostData?.category && setCategory(mainPostData.category);
+      mainPostData?.source && setSource(mainPostData.source);
+      mainPostData?.photo_of && setMention(mainPostData.photo_of);
+   }, [
+      mainPostData?.caption,
+      mainPostData?.category,
+      mainPostData?.source,
+      mainPostData?.photo_of,
+   ]);
 
    //functions
    //edit menu
@@ -161,6 +189,89 @@ export function EditableMainPostContainer({ id }) {
       }
    };
 
+   //for editing category
+   const handleEditCategoryClose = () => {
+      setCategoryDialog(false);
+   };
+
+   const handleEditCategoryOpen = () => {
+      setCategoryDialog(true);
+   };
+
+   const handleEditCategorySubmit = async (event) => {
+      event.preventDefault();
+      var newMainPostData = new FormData();
+      newMainPostData.append('category', category);
+      mainPostData.component_posts.forEach((component) => {
+         newMainPostData.append('component_posts', component);
+      });
+
+      editPost({ data: newMainPostData, id });
+
+      handleEditCategoryClose();
+      closeEditMenu();
+   };
+
+   const handleEditCategoryChange = (event) => {
+      setCategory(event.target.value);
+   };
+
+   //for editing source
+   const handleEditSourceClose = () => {
+      setSourceDialog(false);
+   };
+
+   const handleEditSourceOpen = () => {
+      setSourceDialog(true);
+      console.log(sourceDialog);
+   };
+
+   const handleEditSourceSubmit = async (event) => {
+      event.preventDefault();
+      var newMainPostData = new FormData();
+      newMainPostData.append('source', source);
+      mainPostData.component_posts.forEach((component) => {
+         newMainPostData.append('component_posts', component);
+      });
+
+      editPost({ data: newMainPostData, id });
+
+      handleEditSourceClose();
+      closeEditMenu();
+   };
+
+   const handleEditSourceChange = (event) => {
+      setSource(event.target.value);
+   };
+
+   //for editing mention
+   const handleEditMentionClose = () => {
+      setMentionDialog(false);
+   };
+
+   const handleEditMentionOpen = () => {
+      setMentionDialog(true);
+      console.log(mentionDialog);
+   };
+
+   const handleEditMentionSubmit = async (event) => {
+      event.preventDefault();
+      var newMainPostData = new FormData();
+      newMainPostData.append('photo_of', mention);
+      mainPostData.component_posts.forEach((component) => {
+         newMainPostData.append('component_posts', component);
+      });
+
+      editPost({ data: newMainPostData, id });
+
+      handleEditMentionClose();
+      closeEditMenu();
+   };
+
+   const handleEditMentionChange = (user) => {
+      setMention(user.id);
+   };
+
    return (
       mainPostStatus === 'success' && (
          <div>
@@ -188,6 +299,9 @@ export function EditableMainPostContainer({ id }) {
                handleAddDialogOpen={handleAddDialogOpen}
                handleDeleteDialogOpen={handleDeleteDialogOpen}
                handleEditCaptionOpen={handleEditCaptionOpen}
+               handleEditCategoryOpen={handleEditCategoryOpen}
+               handleEditSourceOpen={handleEditSourceOpen}
+               handleEditMentionOpen={handleEditMentionOpen}
                mainPostData={mainPostData}
             />
             <ChangeMediaDialogView
@@ -224,6 +338,30 @@ export function EditableMainPostContainer({ id }) {
                handleEditCaptionSubmit={handleEditCaptionSubmit}
                caption={caption}
                status={editStatus}
+            />
+            <EditCategoryDialogView
+               categoryDialog={categoryDialog}
+               handleEditCategoryClose={handleEditCategoryClose}
+               handleEditCategoryChange={handleEditCategoryChange}
+               handleEditCategorySubmit={handleEditCategorySubmit}
+               category={category}
+               status={editStatus}
+            />
+            <EditSourceDialog
+               sourceDialog={sourceDialog}
+               handleEditSourceClose={handleEditSourceClose}
+               handleEditSourceChange={handleEditSourceChange}
+               handleEditSourceSubmit={handleEditSourceSubmit}
+               source={source}
+               status={editStatus}
+            />
+            <EditMentionDialog
+               mentionDialog={mentionDialog}
+               handleEditMentionClose={handleEditMentionClose}
+               handleEditMentionChange={handleEditMentionChange}
+               handleEditMentionSubmit={handleEditMentionSubmit}
+               status={editStatus}
+               mention={mention}
             />
             {/* NON CARD VIEWS ENDS */}
          </div>

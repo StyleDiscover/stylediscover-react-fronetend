@@ -1,11 +1,11 @@
 import React from 'react';
 
 //MUI imports
-import { Grid, LinearProgress } from '@material-ui/core';
+import { Grid } from '@material-ui/core';
 
 //component imports
 import { NonEditableMainPost } from 'components';
-import useIntersectionObserver from 'hooks/useIntersectionObserver';
+import { InfiniteScrollIndicator } from 'components/General/InfiniteScrollIndicator';
 
 export default function UserPagePostsView({
    postData,
@@ -13,14 +13,6 @@ export default function UserPagePostsView({
    fetchNextPost,
    hasNextPost,
 }) {
-   const loadMoreButtonRef = React.useRef();
-
-   useIntersectionObserver({
-      target: loadMoreButtonRef,
-      onIntersect: fetchNextPost,
-      enabled: hasNextPost,
-   });
-
    return (
       <Grid container={true} spacing={2}>
          {postData.map((page, i) => (
@@ -34,9 +26,11 @@ export default function UserPagePostsView({
                })}
             </React.Fragment>
          ))}
-         <div ref={loadMoreButtonRef}>
-            {fetchingMorePost && <LinearProgress />}
-         </div>
+         <InfiniteScrollIndicator
+            fetching={fetchingMorePost}
+            hasNext={hasNextPost}
+            fetchNext={fetchNextPost}
+         />
       </Grid>
    );
 }

@@ -10,9 +10,25 @@ const useStyles = makeStyles({
       paddingTop: '100%',
       WebkitTapHighlightColor: 'transparent',
       cursor: 'pointer',
+      position: 'relative',
    },
    mainPostRoot: {
       backgroundPosition: 'cover',
+   },
+
+   customSize: {
+      height: 25,
+      width: 25,
+   },
+   custiomButtonRoot: {
+      minHeight: 0,
+   },
+   customText: {
+      margin: 0,
+      left: 10,
+      bottom: 10,
+      position: 'absolute',
+      color: '#eee',
    },
 });
 

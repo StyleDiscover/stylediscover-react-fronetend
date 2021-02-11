@@ -2,23 +2,22 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 //home page components
-import Hero from 'components/Static/HeroHome';
 import ImageSlider from 'components/Static/ImageSlider';
 import ImageWithContent from 'components/Static/ImageWithContent';
 
 //assets
 import SectionOneImage from 'assets/SectionOne.jpg';
 import SectionOneBackground from 'assets/SectionBackground.png';
+import SectionBackgroundFlipped from 'assets/SectionBackgroundFlipped.png';
 
 //slider image
 import sheenaImg from 'assets/slider/1.jpg';
-import limitlessImg from 'assets/slider/2.jpg';
 import urmiImg from 'assets/slider/3.jpg';
 import chairImg from 'assets/slider/4.png';
 import discoverherstyleImg from 'assets/slider/5.jpeg';
 
 //nav imports
-import { I_AM_BRAND, I_AM_INFLUENCER } from 'navigation/Constants';
+import { I_AM_BRAND, I_AM_INFLUENCER, SOW } from 'navigation/Constants';
 
 //MUI Imports
 import {
@@ -29,6 +28,8 @@ import {
    Container,
    Button,
 } from '@material-ui/core';
+import { StyleOfTheDay } from 'components/General/StyleOfTheDay';
+import { SpacedBox } from 'components/General/SpacedBox';
 
 //use styles
 const useStyles = makeStyles({
@@ -48,22 +49,30 @@ export function Home() {
 
    return (
       <div>
-         <Hero />
+         <div maxWidth="xs" className="margin-top-90">
+            <StyleOfTheDay
+               //  id="429"
+               id="U2FsdGVkX18LQS9q3cRqDmfL*jOonCxVbRgXWLK4I6Q="
+               inspireText="celeb styles"
+               background={SectionBackgroundFlipped}
+            />
+         </div>
+         <SpacedBox />
+         {/* <Hero /> */}
          <div>
             <ImageWithContent
                imageLeft={false}
                title={
                   <Typography variant="h3" className={classes.monFont}>
-                     WE ALL NEED A LITTLE HELP.
+                     FIND YOUR INSPIRATION
                   </Typography>
                }
                imgUrl={SectionOneImage}
                content={
                   <Typography variant="body1" className={classes.monFont}>
-                     StyleDiscover is here to help you discover the latest
-                     trends and the styles from the top influencers in the
-                     country. You can find inspiration and shop for styles that
-                     you love - all in one place.
+                     Join Stylediscover today to get inspired by seeing millions
+                     of styles from other fashionistas and join from over 3000+
+                     group for women.
                   </Typography>
                }
                cta={true}
@@ -84,11 +93,6 @@ export function Home() {
                      imageUrls: chairImg,
                      name: '@thestylechair',
                      sliderUrl: '/thestylechair',
-                  },
-                  {
-                     imageUrls: limitlessImg,
-                     name: '@limitless_adventurer',
-                     sliderUrl: '/limitless_adventurer',
                   },
                   {
                      imageUrls: urmiImg,
@@ -149,21 +153,15 @@ export function Home() {
                   </Grid>
                   <Grid item={true} xs={12} md={6} style={{ margin: 'auto' }}>
                      <MUILink component={Link} to={I_AM_INFLUENCER}>
-                        {/* <Typography
-                           variant="h6"
-                           style={{
-                              padding: '10px 0px',
-                              cursor: 'pointer',
-                              backgroundColor: '#4f5964',
-                              color: '#eacec5',
-                              borderRadius: 15,
-                           }}
-                           align="center"
-                        >
-                           I am an Influencer
-                        </Typography> */}
                         <Button variant="outlined" fullWidth={true}>
                            I Am an influencer
+                        </Button>
+                     </MUILink>
+                  </Grid>
+                  <Grid item={true} xs={12} md={6} style={{ margin: 'auto' }}>
+                     <MUILink component={Link} to={SOW}>
+                        <Button variant="outlined" fullWidth={true}>
+                           I Am a super organized women
                         </Button>
                      </MUILink>
                   </Grid>

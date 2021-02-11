@@ -1,9 +1,9 @@
 import React from 'react';
 
-import { LinearProgress, Grid } from '@material-ui/core';
+import { Grid } from '@material-ui/core';
 import { loadable } from 'react-lazily/loadable';
 
-import useIntersectionObserver from 'hooks/useIntersectionObserver';
+import { InfiniteScrollIndicator } from 'components/General/InfiniteScrollIndicator';
 
 const { EditableMainPost } = loadable(() => import('components'));
 
@@ -13,14 +13,6 @@ export default function ProfilePosts({
    fetchingMorePost,
    postData,
 }) {
-   const loadMoreButtonRef = React.useRef();
-
-   useIntersectionObserver({
-      target: loadMoreButtonRef,
-      onIntersect: fetchNextPost,
-      enabled: hasNextPost,
-   });
-
    return (
       <Grid container={true} spacing={2}>
          {postData.pages.map((page, i) => (
@@ -34,9 +26,11 @@ export default function ProfilePosts({
                })}
             </React.Fragment>
          ))}
-         <div ref={loadMoreButtonRef}>
-            {fetchingMorePost && <LinearProgress />}
-         </div>
+         <InfiniteScrollIndicator
+            hasNext={hasNextPost}
+            fetchNext={fetchNextPost}
+            fetching={fetchingMorePost}
+         />
       </Grid>
    );
 }

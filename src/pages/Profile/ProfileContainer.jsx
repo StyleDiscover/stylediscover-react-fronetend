@@ -22,13 +22,12 @@ import { useGetUser, useGetPosts } from 'hooks';
 
 //view imports
 import CopyRedirectView from './CopyRedirectView';
-import NoPostPRView from './NoPostPRView';
-import NoPostNoEmailView from './NoPostNoEmailView';
-import NoPostEmailView from './NoPostEmailView';
 import ButtonGroupView from './ButtonGroupView';
 import EditProfileDialogView from './EditProfileDialogView';
-import ProfilePosts from './ProfilePosts';
 import CreateButtonView from './CreateButtonView';
+import { CustomTabs } from 'components';
+import ProfilePostsView from './ProfilePostsView';
+import { MainPostCollection, MainPostPhotoOf } from 'pages';
 // import TabsView from './TabsView';
 
 //components, ,
@@ -46,7 +45,6 @@ export function ProfileContainer() {
    const userId = userData?.id;
    const {
       data: postData,
-      error: postError,
       fetchNextPage: fetchNextPost,
       hasNextPage: hasNextPost,
       isFetchingNextPage: fetchingMorePost,
@@ -118,6 +116,42 @@ export function ProfileContainer() {
       setEditProfileOpen(false);
    };
 
+   const tabData = {
+      baseRoute: '/profile',
+      data: [
+         {
+            label: 'Posts',
+            route: '',
+            component: (
+               <ProfilePostsView
+                  postData={postData}
+                  postStatus={postStatus}
+                  user={user}
+                  fetchNextPost={fetchNextPost}
+                  hasNextPost={hasNextPost}
+                  fetchingMorePost={fetchingMorePost}
+                  handleSentInstaEmail={handleSentInstaEmail}
+                  userStatus={userStatus}
+               />
+            ),
+         },
+         {
+            label: 'Collection',
+            route: 'collection',
+            component: userStatus === 'success' && (
+               <MainPostCollection username={userData?.username} />
+            ),
+         },
+         {
+            label: 'Mentions',
+            route: 'mentions',
+            component: userStatus === 'success' && (
+               <MainPostPhotoOf username={userData?.username} />
+            ),
+         },
+      ],
+   };
+
    return Object.keys(user.userData).length !== 0 ? (
       <Container maxWidth="lg" className="margin-top-80">
          {/* PROFILE INFO STARTS */}
@@ -145,55 +179,8 @@ export function ProfileContainer() {
          {/* CREATE BUTTON ENDS */}
 
          {/* TABS STARTS */}
-         {/* <TabsView
-            data={[
-               {
-                  name: 'tab1',
-                  content: <div></div>,
-               },
-               {
-                  name: 'tab',
-                  content: 'tab',
-               },
-            ]}
-         /> */}
+         <CustomTabs data={tabData} />
          {/* TABS ENDS */}
-
-         {/* NO POST STARTS */}
-         {postData?.pages[0]?.results.length === 0 &&
-            user.userData.account_type === 'PR' && <NoPostPRView />}
-         {postData?.pages[0]?.results.length === 0 &&
-            !user.userData.sent_insta_email &&
-            user.userData.account_type !== 'PR' && (
-               <NoPostNoEmailView
-                  accountType={user.userData.account_type}
-                  handleSentInstaEmail={handleSentInstaEmail}
-               />
-            )}
-         {postData?.pages[0]?.results.length === 0 &&
-            user.userData.sent_insta_email &&
-            user.userData.account_type !== 'PR' && <NoPostEmailView />}
-         {/* NO POST ENDS */}
-
-         {/* POST STARTS */}
-         {postStatus === 'loading' ? (
-            <LinearProgress />
-         ) : postStatus === 'error' ? (
-            <div>Error Occured: {postError}</div>
-         ) : postStatus === 'success' ? (
-            <ProfilePosts
-               fetchNextPost={fetchNextPost}
-               hasNextPost={hasNextPost}
-               fetchingMorePost={fetchingMorePost}
-               postData={postData}
-            />
-         ) : (
-            postStatus === 'idle' &&
-            userStatus !== 'error' &&
-            userStatus !== 'loading' && <Typography>No Post</Typography>
-         )}
-
-         {/* POST ENDS */}
 
          {/* EDIT PROFILE DIALOG STARTS */}
          <EditProfileDialogView

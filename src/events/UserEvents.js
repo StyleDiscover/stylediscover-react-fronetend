@@ -69,6 +69,7 @@ export const loginWithEmail = async (
             history.push(`/wishlist?username=${postUsername}`);
          }
          userDispatch({ type: 'NOT_LOADING' });
+         history.goBack();
       })
       .catch((e) => {
          userDispatch({ type: 'UNSET_STATE' });
@@ -94,7 +95,7 @@ export const adminLoginAsUser = async (username, userDispatch, history) => {
          token = res.data.token.split(',')[1].split("'")[1];
          _setAuthToken(token);
          userDispatch({ type: 'NOT_LOADING' });
-         history.push('/profile');
+         history.goBack();
       })
       .catch((e) => {
          userDispatch({ type: 'LOADING' });
@@ -149,6 +150,7 @@ export const loginWithFacebook = async (
             history.push(`/wishlist?username=${postUsername}`);
          }
          userDispatch({ type: 'NOT_LOADING' });
+         history.goBack();
       })
       .catch((e) => {
          userDispatch({ type: 'UNSET_STATE' });
@@ -264,6 +266,7 @@ export const registerWithEmail = async (
             history.push(`/wishlist?username=${postUsername}`);
          }
          ReactPixel.track('CompleteRegistration');
+         history.goBack();
       })
       .catch((e) => {
          userDispatch({ type: 'UNSET_STATE' });

@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 import { UserContext } from '../../context/UserContext';
 import { MyComponentsContext } from '../../context/MyComponentContext';
 import { WishlistContext } from '../../context/WishlistContext';
-import { logout, logoutAll } from '../../events/UserEvents';
+import { logout } from '../../events/UserEvents';
 
 //MUI Core imports
 import {

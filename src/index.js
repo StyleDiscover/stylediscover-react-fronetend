@@ -5,7 +5,6 @@ import App from './App';
 
 //provider imports
 import UserContextProvider from './context/UserContext';
-import MainPostContextProvider from './context/MainPostContext';
 import WishlistContextProvider from './context/WishlistContext';
 import MyComponentsContextProvider from './context/MyComponentContext';
 

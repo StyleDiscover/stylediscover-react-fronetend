@@ -11,5 +11,10 @@ export function InfiniteScrollIndicator({ fetching, fetchNext, hasNext }) {
       enabled: hasNext,
    });
 
-   return <div ref={loadMoreButtonRef}>{fetching && <LinearProgress />}</div>;
+   // return <div ref={loadMoreButtonRef}>{fetching && <LinearProgress />}</div>;
+   return (
+      <div className="asd">
+         <div ref={loadMoreButtonRef}>{fetching && <LinearProgress />}</div>
+      </div>
+   );
 }

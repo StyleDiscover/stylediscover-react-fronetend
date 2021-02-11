@@ -2,6 +2,7 @@ import React from 'react';
 
 //MUI Imports
 import { CardMedia, makeStyles } from '@material-ui/core';
+import { Videocam } from '@material-ui/icons';
 
 //MUI make style
 const useStyles = makeStyles({
@@ -14,27 +15,56 @@ const useStyles = makeStyles({
    mainPostRoot: {
       backgroundPosition: 'cover',
    },
+   customSize: {
+      height: 25,
+      width: 25,
+   },
+   custiomButtonRoot: {
+      minHeight: 0,
+   },
+   customDeleteButton: {
+      margin: 0,
+      right: 10,
+      top: 10,
+      position: 'absolute',
+      color: '#eee',
+   },
+   customText: {
+      margin: 0,
+      left: 10,
+      bottom: 10,
+      position: 'absolute',
+      color: '#eee',
+   },
 });
 
 export function MainPostMediaVideo({ history, mainPostData, encryptedId }) {
    const classes = useStyles();
    return (
-      <CardMedia>
+      <div className="outerDiv">
          <CardMedia
-            image={mainPostData.media_url}
+            image={mainPostData.media_url + '#t=0.8'}
             component="video"
-            autoPlay={true}
+            autoPlay={false}
             loop={true}
             muted={true}
             playsInline={true}
-            style={{
-               width: '100%',
-               cursor: 'pointer',
-            }}
+            className="innerVideo"
             onClick={() => {
                history.push(`/post/${encryptedId}`);
             }}
          ></CardMedia>
+         <div
+            classes={{
+               sizeSmall: classes.customSize,
+               root: classes.custiomButtonRoot,
+            }}
+            size="small"
+            aria-label="like"
+            className={classes.customDeleteButton}
+         >
+            <Videocam style={{ width: 25, height: 25 }} />
+         </div>
          {/* <video
             // controls
             autoPlay={true}
@@ -50,6 +80,6 @@ export function MainPostMediaVideo({ history, mainPostData, encryptedId }) {
                type="video/mp4"
             ></source>
          </video> */}
-      </CardMedia>
+      </div>
    );
 }

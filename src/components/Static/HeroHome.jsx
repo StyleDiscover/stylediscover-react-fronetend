@@ -12,7 +12,6 @@ import VideoWithContent from './VideoWithContent';
 //video import
 import HeroImage from '../../assets/hero.jpg';
 import HeroBackground from '../../assets/HeroBackground.png';
-import ImageWithContent from './ImageWithContent';
 
 //usestyles
 const useStyles = makeStyles({
@@ -25,30 +24,35 @@ export default function Hero() {
    //use styles
    const classes = useStyles();
    return (
-      <LazyHero
-         imageSrc={HeroBackground}
-         minHeight="100vh"
-         opacity="0.5"
-         parallaxOffset="1"
+      <Container
+         maxWidth="xl"
+         className={classes.customContaienr}
+         style={{
+            background: `url(${HeroBackground}) no-repeat center center fixed`,
+            backgroundSize: 'cover',
+            // minHeight: '100vh',
+         }}
       >
-         <VideoWithContent
-            imageLeft={true}
-            title={
-               <Typography variant="h1" className={classes.customLogo}>
-                  StyleDiscover
-               </Typography>
-            }
-            subtitle={
-               <Typography
-                  variant="h4"
-                  className={classes.customLogo}
-                  style={{ color: '#b66d79' }}
-               >
-                  <b>Discover | Get Inspired | Shop</b>
-               </Typography>
-            }
-            vidUrl={HeroImage}
-         />
-      </LazyHero>
+         <Container maxWidth="lg">
+            <VideoWithContent
+               imageLeft={true}
+               title={
+                  <Typography variant="h1" className={classes.customLogo}>
+                     StyleDiscover
+                  </Typography>
+               }
+               subtitle={
+                  <Typography
+                     variant="h4"
+                     className={classes.customLogo}
+                     style={{ color: '#b66d79' }}
+                  >
+                     <b>Discover | Get Inspired | Shop</b>
+                  </Typography>
+               }
+               vidUrl={HeroImage}
+            />
+         </Container>
+      </Container>
    );
 }

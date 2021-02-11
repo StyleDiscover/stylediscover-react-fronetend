@@ -4,7 +4,7 @@ import React from 'react';
 import { MainPostMediaImage, MainPostMediaVideo } from 'components';
 
 //MUI imports
-import { Grid } from '@material-ui/core';
+import { Typography } from '@material-ui/core';
 
 export default function NonEditableMainPostMediaView({
    history,
@@ -14,18 +14,38 @@ export default function NonEditableMainPostMediaView({
    return (
       <div>
          {mainPostData.media_type === 'IM' && (
-            <MainPostMediaImage
-               history={history}
-               encryptedId={encryptedId}
-               mainPostData={mainPostData}
-            />
+            <div>
+               <MainPostMediaImage
+                  history={history}
+                  encryptedId={encryptedId}
+                  mainPostData={mainPostData}
+               />
+               <Typography
+                  variant="body2"
+                  color="primary"
+                  style={{ fontSize: '0.6em', marginRight: 5 }}
+                  align="right"
+               >
+                  {mainPostData.source}
+               </Typography>
+            </div>
          )}
          {mainPostData.media_type === 'VD' && (
-            <MainPostMediaVideo
-               history={history}
-               encryptedId={encryptedId}
-               mainPostData={mainPostData}
-            />
+            <div>
+               <MainPostMediaVideo
+                  history={history}
+                  encryptedId={encryptedId}
+                  mainPostData={mainPostData}
+               />
+               <Typography
+                  variant="body2"
+                  color="primary"
+                  style={{ fontSize: '0.6em', marginRight: 5 }}
+                  align="right"
+               >
+                  {mainPostData.source}
+               </Typography>
+            </div>
          )}
       </div>
    );
